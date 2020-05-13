@@ -225,10 +225,8 @@ def addpost():
 def imagegalary():
     counter = 0
     file_count=0
-    print(f"Counter={counter}")
     if request.method == 'POST':
         image = request.files['image']
-        print(f" Name{image}")
         if image:
             filename = secure_filename(image.filename)
             image.save(os.path.join(app.config['IMAGE_FOLDER'], filename))
