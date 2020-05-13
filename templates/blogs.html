@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <h2><a href="{{ url_for('add') }}">Add a Blog</a></h2>
+          <hr>
+        {% for post in posts %}
+            <a href="{{ url_for('post', post_id=post.id) }}">
+              <h2>
+                {{ post.title }}
+              </h2>
+              </a>
+            <p>Posted by {{ post.author }} on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
+            <hr>
+          {% endfor %}
+
+        </div>
+      </div>
+    </div>
+  {% endblock %}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Palghar Milers</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <h3>{% block heading %}{% endblock %}</h3>
+
+  <style>
+    .container {
+      position: relative;
+      text-align: center;
+      color: white;
+    }
+
+    .row>div {
+      padding: 5px;
+      padding-left: 20px;
+      background-color: teal;
+      text-align: center;
+    }
+
+    .para {
+      font-size: 20px;
+      font-family: Lucida Handwriting;
+      font-weight: bold;
+    }
+
+    .container {
+      position: relative;
+      text-align: center;
+      color: white;
+      padding: 16px;
+    }
+  </style>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-2" style="background-color:white">
+        <a href="{{ url_for('index')}}">
+          <img src="/static/cyclinglogo.jpg" alt="aa" width=20%>
+          <span style="font-family: Matura MT Script Capitals"> Palghar Milers</span>
+        </a>
+      </div>
+      <div class="col-2"> <a href="{{ url_for('blogs')}}">Blogs</a> </div>
+      <div class="col-2"> <a href="{{ url_for('members')}}">Members </a> </div>
+      <div class="col-2"> <a href="{{ url_for('imagegalary')}}">Image Galary </a> </div>
+      <div class="col-2"> <a href="{{ url_for('aboutus')}}">About Us</a> </div>
+      <div class="col-2">
+        {% if session['logged_in'] == True %}
+          <a href="{{ url_for('logout')}}">Logout </a>
+        {% else %}
+          <a href="{{ url_for('userlogin')}}">Login</a>
+        {% endif %}
+      </div>
+      <br>
+      <div class="col-12" style="background-color: darkgrey ">
+        <span class="para">Until you step into the unknown, you don’t know what you are made of... !</span>
+      </div>
+    </div>
+  </div>
+
+  {% block body %}
+  {% endblock %}
+
+  </body>
+
+</html>

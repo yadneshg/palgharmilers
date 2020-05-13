@@ -1,0 +1,24 @@
+<nav>
+  <div class="container">
+    <div class="grid">
+      <div class="column-xs-12 column-md-10">
+        <p id="highlight">Image Galary</p>
+
+          <div id="imageid"></div>
+
+      </div>
+    </div>
+  </div>
+</nav>
+<script>
+  var i = 1;
+	var j={{file_count}};
+  for(i=1;i<j+1;i++){
+    function imageName(i) {
+      var imagesrc = "<img src='/static/images/" + i + ".jpg'>"
+      return imagesrc;
+    }
+    document.getElementById("imageid").innerHTML = imageName(i);
+  }
+
+</script>

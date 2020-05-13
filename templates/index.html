@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block heading %}{% endblock %}
+
+{% block body %}
+<script>
+#div1 {
+  color: red;
+  font-weight: bold;
+  position: absolute;
+  top: 100px;
+  left: 150px;
+  animation: mymove 5s infinite;
+  animation-timing-function: linear;
+}
+.top-left {
+  position: absolute;
+  top: 100px;
+  left: 150px;
+}
+@keyframes mymove {
+  from {left: 0%;}
+  to {left: 100%;}
+}
+</script>
+{{message}}
+<div>
+  <img src="/static/image4.jpg" alt="background Image" width=100%>
+</div>
+<div id="div1" class="top-left">{{birthday_boy}}</div>
+{% endblock %}

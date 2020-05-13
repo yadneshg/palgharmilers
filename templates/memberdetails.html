@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block body %}
+<style>
+  img {
+    width: 20%;
+    height: auto;
+  }
+</style>
+<h1>Member Details</h1>
+<div id="imageid"></div>
+<ul>
+  <li>ID: <span id="memberid">{{ member.id }}</span></li>
+  <li>First Name: {{ member.firstname }}</li>
+  <li>Last Name: {{ member.lastname }}</li>
+  <li>Date of Birth: {{ member.dob }}</li>
+</ul>
+
+<script>
+  var memberid = document.querySelector('#memberid');
+  var memberid = memberid.innerHTML;
+  function changeImage(memberid) {
+    var imagesrc = "<img src='/static/uploads/" + memberid + ".jpg?" + new Date().getTime()+"'>"
+    return imagesrc;
+  }
+  document.getElementById("imageid").innerHTML = changeImage(memberid);
+</script>
+
+<hr>
+<button class="btn btn-primary" id="forupdatemember" onclick="visibleonclick()">Update Member Details </button>
+<hr>
+<div class="myDiv" style="visibility:hidden">
+
+      <form action="{{url_for('forupdatemember')}}" method="post" name="form3" enctype=multipart/form-data>
+      ID : {{member.id}} <input type="hidden" id="updateid" name="updateid" value="{{member.id}}"/><br>
+      First Name : <input type="text" class="mm" name="updatefname" id="updatefname" value="{{ member.firstname }}" autocomplete="off" autofocus><br><br>
+      Last Name : <input type="tel" class="mm" name="updatelname" id="updatelname" value= "{{ member.lastname }}" autocomplete="off" autofocus><br><br>
+      Date of Birth : <input type="date" name="updatedob" id="updatedob" value="{{ member.dob }}"><br><br>
+      Upload Photo :  <input type=file name=file><br><br>
+      <button class="btn btn-primary" id="regstermember" type="submit" value="Update">Update</button>
+    </form>
+
+</div>
+<script>
+      function visibleonclick() {
+        var elementid=".myDiv";
+          if (document.querySelector(elementid).style.visibility === "hidden"){
+              document.querySelector(elementid).style.visibility = "visible";
+          }
+          else {
+            document.querySelector(elementid).style.visibility = "hidden"
+          }
+      }
+</script>
+{% endblock %}

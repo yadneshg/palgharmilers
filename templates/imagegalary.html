@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+
+{% block body %}
+
+        <form action="{{url_for('imagegalary')}}" enctype=multipart/form-data method="POST">
+          Upload Images : <input type=file name=image><br>
+          <button class="btn btn-primary" id="imageupload" type="submit" >Upload</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<p style="text-align:center;">Image Galary</p>
+{% for i in range(file_count) %}
+  <img style= 'width: 100%' src='/static/images/{{i}}.jpg?new Date().getTime()'> <br><br>
+
+{% endfor %}
+
+
+<script>
+const imgContent = document.querySelectorAll('.img-content-hover');
+
+function showImgContent(e) {
+for(var i = 0; i < imgContent.length; i++) {
+  imgContent[i].style.left = e.pageX + 'px';
+  imgContent[i].style.top = e.pageY + 'px';
+}
+};
+
+document.addEventListener('mousemove', showImgContent);
+</script>
+{% endblock %}
