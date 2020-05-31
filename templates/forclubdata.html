@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+{% block body %}
+<style>
+  body,
+  html {
+    height: 100%;
+  }
+
+  .bg {
+    background-image: url("/static/background2.jpg");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .clubdata1 {
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Black w/opacity/see-through */
+    color: white;
+    font-weight: bold;
+    font-family: Century Gothic;
+    border: 3px solid #f1f1f1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 40%;
+    padding: 20px;
+    text-align: justify;
+  }
+
+  .forrightalign {
+    text-align: right;
+    text-decoration-color: white;
+  }
+
+  .forcenteralign {
+    text-align: center;
+    text-decoration-color: white;
+  }
+
+  .forleftalign {
+    text-align: left;
+    padding: 25px;
+  }
+</style>
+
+<div class="clubdata1" id="clubdata1">
+  <div class="forrightalign">
+    <form action="{{ url_for('club_data', club_id = 264954)}}" method="POST">
+      Enter Date from : <input type="date" name="data_date" id="data_date" />
+      <button class="btn btn-primary" type="submit">Get Club data</button> <br>
+    </form>
+    <hr>
+
+    <form action="{{ url_for('club_data', club_id = 264954)}}" method="POST">
+      <input type="hidden" name="data_date" value="{{'2000-01-01'}}" id="data_date" />
+      <button class="btn btn-primary" type="submit">All Club Data</button> <br>
+    </form>
+
+  <hr>
+  <form action="{{ url_for('club_data', club_id = 264954)}}" method="POST">
+    <input type="hidden" name="data_date" value="{{'2000-01-01'}}" id="data_date" />
+
+
+    <select name="strava_member">
+      {% for member in members %}
+
+      <option value="{{member.strava_id}}">{{member.strava_id}} : {{member.firstname}}  {{member.lastname}} </option>
+
+      {% endfor %}
+    </select>
+    <button class="btn btn-primary" type="submit" disabled>Club Data</button> <br>
+  </form>
+</div>
+</div>
+<script>
+var date = new Date();
+
+var day = date.getDate();
+var month = date.getMonth() + 1;
+var year = date.getFullYear();
+
+if (month < 10) month = "0" + month;
+if (day < 10) day = "0" + day;
+
+var today = year + "-" + month + "-" + day;
+document.getElementById("data_date").value = today;
+</script>
+
+{% endblock %}

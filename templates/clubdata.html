@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Strava</title>
+</head>
+
+<body>
+  Welcome !! 
+  <ol>
+    {% for data in clubdata[:entries] %}
+
+    <li>
+      Athlete : {{data.athlete["firstname"]}} -
+      <ul>
+        <li>Name of the Ride : {{data.name}}</li>
+        <li>Distance : {{data.distance/1000}} kms.</li>
+        <li>Moving Time : {{(data.moving_time)/60}} mins.</li>
+        <li>Elapsed Time : {{(data.elapsed_time)/60}} mins. </li>
+        <li>Average Speed : {{((data.distance)/1000)/((data.moving_time)/(60*60))}}</li>
+        <li>Total Elevation Gain : {{data.total_elevation_gain}} mtrs.</li>
+        <li>Type of Ride : {{data.type}}</li>
+        <li>Type of Workout : {{data.workout_type}}</li>
+      </ul>
+    </li>
+    {% endfor %}
+  </ol>
+
+</body>
+
+</html>

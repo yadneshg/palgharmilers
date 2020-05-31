@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+{% block heading %}{% endblock %}
+
+{% block body %}
+<style>
+  body,
+  html {
+    height: 100%;
+  }
+
+  .bg {
+    background-image: url("/static/background2.jpg");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .regmemberwindow {
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-weight: bold;
+    border: 3px solid #f1f1f1;
+    position: absolute;
+    top: 350px;
+    left: 700px;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 600px;
+    height: 500px;
+    padding: 5px 5px;
+  }
+
+  span.psw {
+    float: right;
+    padding-top: 40px;
+  }
+
+  span.cancel {
+    float: left;
+    padding-top: 40px;
+  }
+
+  /* Change styles for span and cancel button on extra small screens */
+  @media screen and (max-width: 300px) {
+    span.psw {
+      display: block;
+      float: none;
+    }
+
+    span.cancel {
+      display: block;
+      float: none;
+    }
+  }
+
+  input[type=text],
+  input[type=password],
+  input[type=email],
+  input[type=number],
+  input[type=date] {
+    width: 80%;
+    padding: 3px 10px;
+    margin: 8px 0;
+  }
+
+  button:hover {
+    opacity: 0.8;
+
+    /* SCROLL BAR */
+    /* width */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: #888;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+</style>
+<div id="kryesore" style="overflow-y: scroll;" class="regmemberwindow">
+  <div class="myDiv" id="reg_member">
+    <label><b>Member Registration</b></label>
+    <form action="{{url_for('registermember')}}" method="post" name="form2" enctype=multipart/form-data>
+      First Name : <br><input type="text" class="mm" name="memberfname" id="memberfname" placeholder="First Name" autocomplete="off" autofocus><br><br>
+      Middle Name : <br><input type="text" class="mm" name="membermname" id="membermname" placeholder="Middle Name" autocomplete="off" autofocus><br><br>
+      Last Name : <br><input type="text" class="mm" name="memberlname" id="memberlname" placeholder="Last Name" autocomplete="off" autofocus><br><br>
+      Email Id : <br><input type="email" class="mm" name="memberemail" id="memberemail" placeholder="Email Id" autocomplete="off" autofocus><br><br>
+      Mobile No. : <br><input class="mm" type="number" id="membermobile" name="membermobile" placeholder="Mobile No." required><br><br>
+      Date of Birth : <br><input type="date" name="memberdob" id="memberdob" value="2000-01-01"><br><br>
+      Strava ID : <br><input class="mm" type="number" id="stravaid" name="stravaid" value="0" placeholder="Strava ID" required><br><br>
+      Upload Photo : <input type=file name=file accept=".gif,.jpg,.jpeg,.png"><br><br>
+      <button class="btn btn-primary" id="regstermember" type="submit" value="Register">Register</button>
+      <a href="{{ url_for('members')}}" class="btn btn-primary">Back</a>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

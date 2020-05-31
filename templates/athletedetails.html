@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+{% block body %}
+<style>
+  body,
+  html {
+    height: 100%;
+  }
+
+  .bg {
+    background-image: url("/static/background2.jpg");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .athletedetailswindow {
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Black w/opacity/see-through */
+    color: white;
+    font-weight: bold;
+    border: 3px solid #f1f1f1;
+    position: absolute;
+    top: 350px;
+    left: 700px;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 600px;
+    height: 500px;
+    padding: 5px 5px;
+  }
+
+  .forrightalign {
+    text-align: right;
+    text-decoration-color: white;
+  }
+
+  .forcenteralign {
+    text-align: center;
+    text-decoration-color: white;
+  }
+  .forleftalign {
+    text-align: left;
+    padding:25px;
+  }
+  /* SCROLL BAR */
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+</style>
+<div id="kryesore" style="overflow-y: scroll;" class="athletedetailswindow">
+  <div class="forrightalign">
+<a href="{{ url_for('members')}}" class="btn btn-primary">Back</a>
+</div>
+  <div class="forcenteralign">
+    <h3> Athlete Details </h3>
+    <img src="  {{athletedetails.profile}}" alt="">
+  </div> <br><br>
+  <div class="forleftalign">
+    <a href="{{ url_for('athlete_stats', athlete_id=athletedetails.id)}}">
+      Statistics for Strava ID {{athletedetails.id}}
+    </a><br><br>
+
+  ID : {{athletedetails.id}} <br><br>
+  USERNAME : {{athletedetails.username}}<br><br>
+  NAME : {{athletedetails.firstname}} {{athletedetails.lastname}}<br><br>
+  ADDRESS : {{athletedetails.city}}, {{athletedetails.state}}, {{athletedetails.country}}<br><br>
+  GENDER : {{athletedetails.sex}}<br><br>
+  PROFILE CREATED ON : {{athletedetails.created_at}}<br><br>
+  PROFLE UPDATED ON : {{athletedetails.updated_at}}<br><br>
+  BADGE : {{athletedetails.badge_type_id}}<br><br>
+  FOLLOWERS : {{athletedetails.follower}}<br><br>
+</div>
+</div>
+{% endblock %}

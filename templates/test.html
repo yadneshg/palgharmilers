@@ -1,24 +1,23 @@
-<nav>
-  <div class="container">
-    <div class="grid">
-      <div class="column-xs-12 column-md-10">
-        <p id="highlight">Image Galary</p>
 
-          <div id="imageid"></div>
+<!-- Start WOWSlider.com HEAD section -->
+<link rel="stylesheet" type="text/css" href="engine1/style.css" />
+<script type="text/javascript" src="engine1/jquery.js"></script>
+<!-- End WOWSlider.com HEAD section -->
 
-      </div>
-    </div>
-  </div>
-</nav>
-<script>
-  var i = 1;
-	var j={{file_count}};
-  for(i=1;i<j+1;i++){
-    function imageName(i) {
-      var imagesrc = "<img src='/static/images/" + i + ".jpg'>"
-      return imagesrc;
-    }
-    document.getElementById("imageid").innerHTML = imageName(i);
-  }
-
-</script>
+<!-- Start WOWSlider.com BODY section -->
+<div id="wowslider-container1">
+<div class="ws_images"><ul>
+		<li><img src="uploads/1.jpg" alt="Sheet" title="Sheet" id="wows1_0"/>Because dew is related to the temperature of surfaces, in late summer it forms most easily on surfaces that are not warmed by conducted heat from deep ground, such as grass, leaves, railings, car roofs, and bridges.</li>
+		<li><img src="uploads/1.jpg" alt="Plumage" title="Plumage" id="wows1_1"/>Bird feather with dew drops.</li>
+		<li><img src="uploads/1.jpg" alt="Black and White Sheet" title="Black and White Sheet" id="wows1_2"/>Dew is water in the form of droplets that appears on thin, exposed objects in the morning or evening due to condensation.</li>
+	</ul></div>
+	<div class="ws_bullets"><div>
+		<a href="#" title="Sheet"><span><img src="data1/tooltips/nature497978_1920.jpg" alt="Sheet"/>1</span></a>
+		<a href="#" title="Plumage"><span><img src="data1/tooltips/plumage176723_1920.jpg" alt="Plumage"/>2</span></a>
+		<a href="#" title="Black and White Sheet"><span><img src="data1/tooltips/sheet546475_1920.jpg" alt="Black and White Sheet"/>3</span></a>
+	</div></div>
+<div class="ws_shadow"></div>
+</div>
+<script type="text/javascript" src="engine1/wowslider.js"></script>
+<script type="text/javascript" src="engine1/script.js"></script>
+<!-- End WOWSlider.com BODY section -->

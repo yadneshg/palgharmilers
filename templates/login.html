@@ -1,13 +1,68 @@
 {% extends "layout.html" %}
 {% block body %}
 <style>
-  body {
-    font-family: Arial, Helvetica, sans-serif;
+  body,
+  html {
+    height: 100%;
   }
-  form {
+
+  .bg {
+    background-image: url("/static/background2.jpg");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .message {
+    background-color: rgb(0, 0, 0);  /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.001);   /* Black w/opacity/see-through */
+    color: blue;
+    font-weight: bold;
+    font-family: Castellar;
+    position: absolute;
+    top: 18%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 50%;
+    padding: 20px;
+    text-align: center;
+  }
+  /* Position text in the middle of the page/image */
+  .loginwindow {
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Black w/opacity/see-through */
+    color: white;
+    font-weight: bold;
     border: 3px solid #f1f1f1;
-    width: 50%
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 30%;
+    padding: 20px;
+    text-align: center;
   }
+
+  span.psw {
+    float: right;
+    padding-top: 40px;
+  }
+  span.cancel {
+    float: left;
+    padding-top: 40px;
+  }
+  /* Change styles for span and cancel button on extra small screens */
+  @media screen and (max-width: 300px) {
+    span.psw {
+      display: block;
+      float: none;
+    }
+  }
+
   input[type=text],
   input[type=password] {
     width: 100%;
@@ -17,77 +72,88 @@
     border: 1px solid #ccc;
     box-sizing: border-box;
   }
-  button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
+  .psw {
+    align: right;
+  }
+  .newuser {
+    align: right;
+  }
+  #loginbtn {
+    align: center;
   }
   button:hover {
     opacity: 0.8;
   }
-  .cancelbtn {
-    width: auto;
-    padding: 10px 18px;
-    background-color: #f44336;
-  }
+
   .imgcontainer {
     text-align: center;
     margin: 12px 0 6px 0;
   }
+
   img.logo {
     width: 20%;
     border-radius: 50%;
   }
-  .container1 {
-    padding: 16px;
-    width: 90%;
+
+  /* Close Button */
+
+  [class*='close-'] {
+    color: #777;
+    font: 14px/100% arial, sans-serif;
+    position: absolute;
+    right: 5px;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #fff;
+    top: 5px;
   }
-  span.psw {
-    float: right;
-    padding-top: 4px;
+
+  .close-classic:after {
+    content: 'X';
+    /* ANSI X letter */
   }
-  span.cancel {
-    float: center;
-    padding-top: 16px;
+
+  .loginwindow:after {
+    content: '';
+    display: block;
+    clear: both;
   }
-  /* Change styles for span and cancel button on extra small screens */
-  @media screen and (max-width: 300px) {
-    span.psw {
-      display: block;
-      float: none;
-    }
-    span.cancel {
-      display: block;
-      float: none;
-    }
-  }
+  /* The Close Button (x) */
+.close {
+  position: absolute;
+  right: 25px;
+  top: 0;
+  color: #000;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: blue;
+  cursor: pointer;
+}
 </style>
-{{ message }}
-<form action="{{url_for('userlogin')}}" method="post">
-  <div class="imgcontainer">
-    <img src="/static/cyclinglogo.jpg" alt="cycling Logo" class="logo">
+
+<body>
+  <div class="message">
+    {{ message }}
   </div>
+  <div class="loginwindow" id= "id01">
+    <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close">&times;</span>
+    <form action="{{url_for('userlogin')}}" method="post">
+      <div class="imgcontainer">
+        <img src="/static/cyclinglogo.jpg" alt="cycling Logo" class="logo">
+      </div>
+      <div>
+        <label for="username"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="username" required>
 
-  <div class="container1">
-    <label for="username"><b>Username</b></label>
-    <input type="text" placeholder="Enter Username" name="username" required>
+        <label for="password"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="password" required>
+        <button class="btn btn-primary btn-lg" id="loginbtn"  type="submit" value="Login">Login</button>
+    </form><br><br>
 
-    <label for="password"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="password" required>
-
-    <button type="submit">Login</button>
-    <label>
-      <input type="checkbox" checked="checked" name="remember"> Remember me
-    </label>
+    <div class="newuser"><a href="{{url_for('forregistermember')}}">New User? Register</a></div><br>
+    <div class="psw"> <a href="{{url_for('index')}}">Forgot password?</a></div>
   </div>
-
-  <div class="container1" style="background-color:#f1f1f1">
-    <span class="cancel"><a href="{{url_for('index')}}">Cancel</a></span>
-    <span class="psw"> <a href="#">Forgot password?</a></span>
-  </div>
-</form>
-{% endblock %}
+  {% endblock %}

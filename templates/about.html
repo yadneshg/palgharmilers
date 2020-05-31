@@ -1,29 +1,56 @@
 {% extends "layout.html" %}
 {% block body %}
+<style>
+  body,
+  html {
+    height: 100%;
+  }
 
-    <!-- Page Header -->
-    <header class="masthead" style="background-image: url('{{ url_for('static', filename='about-bg.jpg') }}')">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 col-md-10 mx-auto">
-            <div class="page-heading">
-              <h1>Palghar Milers</h1>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
+  .bg {
+    background-image: url("/static/background2.jpg");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
 
-    <!-- Main Content -->
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <p> Palghar Milers have been promoting cycling, Trekking and other sports activities  for over 5 years. We are an active, community-based club with members from different age categories.
-              Palghar Milers Club provide an opportunity for riders from Palghar to get together at weekends and midweek, including some evenings for some fantastic social cycling as well as organizing various trekking and other events at weekends.
-              Palghar Milers Club are now planning for Cycling events for 100 km cycling and 150 kms Cycling in coming days.
-          </p>
-        </div>
+  .aboutwindow {
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Black w/opacity/see-through */
+    color: white;
+    font-weight: bold;
+    font-family: Century Gothic;
+    border: 3px solid #f1f1f1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 60%;
+    padding: 20px;
+    text-align: justify;
+  }
+</style>
+<!-- Page Header -->
+<div class="aboutwindow" id="about">
+  <div style="text-align:center">
+    <h3>Palghar Milers</h3>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <p> Palghar Milers have been promoting cycling, Trekking and other sports activities for over 5 years. We are an active, community-based club with members from different age categories.
+        </p>
+        <p>
+          Palghar Milers Club provide an opportunity for riders from Palghar to get together at weekends and midweek, including some evenings for some fantastic social cycling as well as organizing various trekking and other events at weekends.
+        </p>
+        <p>
+          Palghar Milers Club are now planning for Cycling events for 100 km cycling and 150 kms Cycling in coming days.
+        </p>
       </div>
     </div>
-
-  {% endblock %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block body %}
+<style>
+  body,
+  html {
+    height: 100%;
+  }
+
+  .bg {
+    background-image: url("/static/background2.jpg");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .aboutwindow {
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Black w/opacity/see-through */
+    color: white;
+    font-weight: bold;
+    font-family: Century Gothic;
+    border: 3px solid #f1f1f1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 60%;
+    padding: 20px;
+    text-align: justify;
+  }
+</style>
+<!-- Page Header -->
+<div class="aboutwindow" id="about">
+  <div style="text-align:center">
+    <h3>Palghar Milers</h3>
+  </div>
+  <h3> Club Deails </h3>
+  Club ID : {{clubs[0].id}} <br>
+  Name of Club : {{clubs[0].name}}<br>
+  Address : {{clubs[0].city}}, {{clubs[0].state}},  {{clubs[0].country}}<br>
+  No. of Members : {{clubs[0].member_count}}<br>
+  <h4>Admins </h4>
+  <ul>
+    {% for admin in clubadmins %}
+    <li>
+      {{admin.firstname}} {{admin.lastname}}
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}
+
+
+  <form action="{{ url_for('for_club_data')}}" method="POST">
+    Enter Club Id for Club Data : <input type="number" name="club_id" value="{{clubs[0].id}}" id="get_clubid" />
+    <button type="submit">Submit</button> <br>
+  </form>
+
+  <h3> Club Members </h3>
+  <ol>
+    {% for clubmember in clubmembers %}
+    <li>
+      {{clubmember.firstname}} {{clubmember.lastname}}
+    </li>
+    {% endfor %}
+  </ol>

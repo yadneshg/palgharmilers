@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Strava</title>
+  </head>
+  <body>
+  <h3>  Athlete Details </h3>
+
+    <img src="  {{athletedetails.profile}}" alt=""><br><br>
+    ID : {{athletedetails.id}} <br><br>
+    USERNAME : {{athletedetails.username}}<br><br>
+    NAME : {{athletedetails.firstname}} {{athletedetails.lastname}}<br><br>
+    ADDRESS : {{athletedetails.city}}, {{athletedetails.state}}<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{athletedetails.country}}<br>
+    GENDER : {{athletedetails.sex}}<br><br>
+    {% if athletedetails.premium %}
+      CATEGORY : Premium
+      {% else %}
+      CATEGORY : General
+    {% endif %}
+  <br><br>
+  {% if athletedetails.summit %}
+    SUMMIT : TRUE
+    {% else %}
+    SUMMIT : --
+  {% endif %}
+    <br><br>
+    PROFILE CREATED ON :  {{athletedetails.created_at}}<br><br>
+    PROFLE UPDATED ON :  {{athletedetails.updated_at}}<br><br>
+    BADGE : {{athletedetails.badge_type_id}}<br><br>
+
+    FOLLOWERS : {{athletedetails.follower}}<br><br>
+
+
+  </body>
+</html>

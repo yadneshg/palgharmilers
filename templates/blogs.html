@@ -1,22 +1,87 @@
 {% extends "layout.html" %}
 {% block body %}
+<style>
+  body,
+  html {
+    height: 100%;
+  }
 
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <h2><a href="{{ url_for('add') }}">Add a Blog</a></h2>
-          <hr>
+  .bg {
+    background-image: url("/static/background2.jpg");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .blog {
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Black w/opacity/see-through */
+    color: white;
+    font-weight: bold;
+    border: 3px solid #f1f1f1;
+    position: absolute;
+    top: 350px;
+    left: 700px;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 800px;
+    height: 500px;
+    padding: 5px;
+  }
+
+  hr {
+    position: relative;
+    top: 20px;
+    border: none;
+    height: 6px;
+    background: blue;
+    margin-bottom: 50px;
+  }
+
+  /* SCROLL BAR */
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+</style>
+
+<div id="kryesore" style="overflow-y: scroll;" class="blog">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <h3><a href="{{ url_for('add') }}">Add a Blog</a></h3>
+        <hr>
+        
         {% for post in posts %}
-            <a href="{{ url_for('post', post_id=post.id) }}">
-              <h2>
-                {{ post.title }}
-              </h2>
-              </a>
-            <p>Posted by {{ post.author }} on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
-            <hr>
-          {% endfor %}
+        <a href="{{ url_for('post', post_id=post.id) }}">
+          <h4>
+            {{ post.title }}
+          </h4>
+        </a>
+        <p>Posted by {{ post.author }} on {{ post.date_posted.strftime('%B %d, %Y') }}</p>
+        <hr>
+        {% endfor %}
 
-        </div>
       </div>
     </div>
-  {% endblock %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+{% block heading %}{% endblock %}
+
+{% block body %}
+<style>
+
+  /* Position text in the middle of the page/image */
+  .regmemberwindow {
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Black w/opacity/see-through */
+    color: white;
+    font-weight: bold;
+    border: 3px solid #f1f1f1;
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 30%;
+    padding: 20px;
+    text-align: center;
+  }
+
+  span.psw {
+    float: right;
+    padding-top: 40px;
+  }
+  span.cancel {
+    float: left;
+    padding-top: 40px;
+  }
+  /* Change styles for span and cancel button on extra small screens */
+  @media screen and (max-width: 300px) {
+    span.psw {
+      display: block;
+      float: none;
+    }
+    span.cancel {
+      display: block;
+      float: none;
+    }
+  }
+
+  input[type=text],
+  input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  .psw {
+    align: right;
+  }
+  .newuser {
+    align: right;
+  }
+  #loginbtn {
+    align: center;
+  }
+  button:hover {
+    opacity: 0.8;
+  }
+
+  .imgcontainer {
+    text-align: center;
+    margin: 12px 0 6px 0;
+  }
+
+  img.logo {
+    width: 20%;
+    border-radius: 50%;
+  }
+
+  /* Close Button */
+
+  [class*='close-'] {
+    color: #777;
+    font: 14px/100% arial, sans-serif;
+    position: absolute;
+    right: 5px;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #fff;
+    top: 5px;
+  }
+
+  .close-classic:after {
+    content: 'X';
+    /* ANSI X letter */
+  }
+
+  .loginwindow:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+</style>
+
+  <div class="loginwindow">
+
+
+<div class="myDiv" id="reg_member">
+  <form action="{{url_for('registermember')}}" method="post" name="form2" enctype=multipart/form-data>
+    First Name : <input type="text" class="mm" name="memberfname" id="memberfname" placeholder="First Name" autocomplete="off" autofocus><br><br>
+    Middle Name : <input type="text" class="mm" name="membermname" id="membermname" placeholder="Middle Name" autocomplete="off" autofocus><br><br>
+    Last Name : <input type="tel" class="mm" name="memberlname" id="memberlname" placeholder="Last Name" autocomplete="off" autofocus><br><br>
+    Email Id : <input type="email" class="mm" name="memberemail" id="memberemail" placeholder="Email Id" autocomplete="off" autofocus><br><br>
+    Mobile No. : <input class="mm" type="number" id="membermobile" name="membermobile" placeholder="Mobile No." required>
+    Date of Birth : <input type="date" name="memberdob" id="memberdob" value="2000-01-01"><br><br>
+    Upload Photo : <input type=file name=file accept=".gif,.jpg,.jpeg,.png"><br><br>
+    <button class="btn btn-primary" id="regstermember" type="submit" value="Register">Register</button>
+  </form>
+</div>
+</div>
+{% endblock %}
