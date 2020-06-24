@@ -1,36 +1,10 @@
 {% extends "layout.html" %}
-{% block heading %}{% endblock %}
 
-{% block body %}
+{% block heading %}
+  <script src="/static/js/allscripts.js"></script>
+  <link rel="stylesheet" href="/static/css/common.css?new Date().getTime()">
+
 <style>
-  body,
-  html {
-    height: 100%;
-  }
-
-  .bg {
-    background-image: url("/static/background2.jpg");
-    height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  .regmemberwindow {
-    background-color: rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    font-weight: bold;
-    border: 3px solid #f1f1f1;
-    position: absolute;
-    top: 350px;
-    left: 700px;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    width: 600px;
-    height: 500px;
-    padding: 5px 5px;
-  }
 
   span.psw {
     float: right;
@@ -68,43 +42,33 @@
   button:hover {
     opacity: 0.8;
 
-    /* SCROLL BAR */
-    /* width */
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    /* Track */
-    ::-webkit-scrollbar-track {
-      background: #f1f1f1;
-    }
-
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-      background: #888;
-    }
-
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-      background: #555;
-    }
 </style>
-<div id="kryesore" style="overflow-y: scroll;" class="regmemberwindow">
-  <div class="myDiv" id="reg_member">
-    <label><b>Member Registration</b></label>
+{% endblock %}
+
+
+{% block body %}
+  <div class="mainwindow" id="reg_member">
+    <a href="{{ url_for('members')}}"  class="close" title="Close">&times;</a>
+
+    <h3>Member Registration</h3>
     <form action="{{url_for('registermember')}}" method="post" name="form2" enctype=multipart/form-data>
-      First Name : <br><input type="text" class="mm" name="memberfname" id="memberfname" placeholder="First Name" autocomplete="off" autofocus><br><br>
-      Middle Name : <br><input type="text" class="mm" name="membermname" id="membermname" placeholder="Middle Name" autocomplete="off" autofocus><br><br>
-      Last Name : <br><input type="text" class="mm" name="memberlname" id="memberlname" placeholder="Last Name" autocomplete="off" autofocus><br><br>
-      Email Id : <br><input type="email" class="mm" name="memberemail" id="memberemail" placeholder="Email Id" autocomplete="off" autofocus><br><br>
+      <div class="leftalign">
+      First Name : <br><input type="text" class="mm" name="memberfname" id="memberfname" placeholder="First Name" autocomplete="off" autofocus required><br><br>
+      Middle Name : <br><input type="text" class="mm" name="membermname" id="membermname" placeholder="Middle Name" autocomplete="off" autofocus required><br><br>
+      Last Name : <br><input type="text" class="mm" name="memberlname" id="memberlname" placeholder="Last Name" autocomplete="off" autofocus required><br><br>
+      Email Id : <br><input type="email" class="mm" name="memberemail" id="memberemail" placeholder="Email Id" autocomplete="off" autofocus required><br><br>
       Mobile No. : <br><input class="mm" type="number" id="membermobile" name="membermobile" placeholder="Mobile No." required><br><br>
-      Date of Birth : <br><input type="date" name="memberdob" id="memberdob" value="2000-01-01"><br><br>
+      Date of Birth : <br><input type="date" name="memberdob" id="memberdob" value="2000-01-01" required><br><br>
       Strava ID : <br><input class="mm" type="number" id="stravaid" name="stravaid" value="0" placeholder="Strava ID" required><br><br>
       Upload Photo : <input type=file name=file accept=".gif,.jpg,.jpeg,.png"><br><br>
+      </div>
+      <div class="centeralign">
       <button class="btn btn-primary" id="regstermember" type="submit" value="Register">Register</button>
       <a href="{{ url_for('members')}}" class="btn btn-primary">Back</a>
+      </div>
     </form>
+
   </div>
-</div>
+  </div>
 
 {% endblock %}

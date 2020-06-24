@@ -2,16 +2,19 @@ import uuid
 from functools import wraps
 from sqlalchemy.orm import session
 from models import *
-from flask import Flask, render_template, request, url_for, redirect, flash, session, jsonify, send_from_directory
-import datetime
+import datetime as dt
 import os
 from werkzeug.utils import secure_filename
 import os.path
 from functools import wraps
 import csv
-import json
 import urllib3
+import json
 import requests
+from flask import Flask, redirect, request, url_for, render_template, flash, session, jsonify, send_from_directory
+from flask_login import LoginManager, login_user, logout_user, current_user
+from oauthlib.oauth2 import WebApplicationClient
+
 
 app = Flask(__name__)
 
@@ -24,7 +27,21 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:Cyber123@localhos
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = '25296'
 app.config['SESSION_TYPE'] = 'filesystem'
+
+# Configuration
+GOOGLE_CLIENT_ID = "894510096466-4a3dofffj91rhea17ibu710r4b6r86no.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET = "QlPMrROw-GtH0E5DnzZhTHGi"
+GOOGLE_DISCOVERY_URL = ("https://accounts.google.com/.well-known/openid-configuration")
+
+lm = LoginManager(app)
+lm.login_view = 'index'
 db.init_app(app)
+
+@lm.user_loader
+def load_user(id):
+    return Guser.query.get(str(id))
+
+client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 if __name__ == "__main__":
     app.run(debug=True)
@@ -57,8 +74,8 @@ def renew_token():
 
 @app.route("/")
 def index():
-    message = "Welcome to Palghar Milers!"
-    now = datetime.datetime.now() #todays date
+    message = ""
+    now = dt.datetime.now() #todays date
     d = now.day  #day
     m = now.month #month
     y = now.year #year
@@ -73,8 +90,11 @@ def index():
         member_date = int(memberbirthday[8:10])
         if d==member_date and m== member_month:
             birthday_boy += "Happy Birthday,"+member.firstname+"!  "
+        profilepicid=session['profilepicid']
+    return render_template("index.html",birthday_boy=birthday_boy, message=message, profilepicid=profilepicid)
 
-    return render_template("index.html",birthday_boy=birthday_boy, message=message)
+def get_google_provider_cfg():
+    return requests.get(GOOGLE_DISCOVERY_URL).json()
 
 @app.route("/login")
 def login():
@@ -85,18 +105,25 @@ def login():
 def userlogin():
     username = request.form.get("username")
     password = request.form.get("password")
-    members = Member.query.all()
-    for member in members:
-        if  (username==member.username and password==member.password) or (username=="admin" and password=="123"):
+    member = Member.query.filter_by(username=username).first()
+
+    #members = Member.query.all()
+    if  (username==member.username and password==member.password) or (username=="admin" and password=="123"):
             session['logged_in'] = True
-            message = 'You are Logged In'
+            session['googleuser'] = False
+            session['profilepicid'] = member.id
+            message= "You are Logged In"
+            print(session['profilepicid'])
             return render_template('index.html', message=message)
-    return render_template('login.html', message="Invalid Credentils")
+    flash("Invalid Credentils")
+    return render_template('login.html')
+
 
 #for login session
 def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
+        message=""
         if 'logged_in' in session:
             return f(*args, **kwargs)
         else:
@@ -104,13 +131,99 @@ def login_required(f):
             return render_template('login.html', message=message)
     return wrap
 
+
+@app.route("/google_login")
+def google_login():
+    # Find out what URL to hit for Google login
+    google_provider_cfg = get_google_provider_cfg()
+    authorization_endpoint = google_provider_cfg["authorization_endpoint"]
+    # Use library to construct the request for Google login and provide
+    # scopes that let you retrieve user's profile from Google
+    request_uri = client.prepare_request_uri(
+        authorization_endpoint,
+        redirect_uri=request.base_url + "/callback",
+        scope=["openid", "email", "profile"],
+    )
+    return redirect(request_uri)
+
+@app.route("/google_login/callback")
+def callback():
+    # Get authorization code Google sent back to you
+    code = request.args.get("code")
+    # Find out what URL to hit to get tokens that allow you to ask for
+    # things on behalf of a user
+    google_provider_cfg = get_google_provider_cfg()
+    token_endpoint = google_provider_cfg["token_endpoint"]
+
+    # Prepare and send a request to get tokens! Yay tokens!
+    token_url, headers, body = client.prepare_token_request(
+        token_endpoint,
+        authorization_response=request.url,
+        redirect_url=request.base_url,
+        code=code
+    )
+    token_response = requests.post(
+        token_url,
+        headers=headers,
+        data=body,
+        auth=(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET),
+    )
+
+    # Parse the tokens!
+    client.parse_request_body_response(json.dumps(token_response.json()))
+
+    # Now that you have tokens (yay) let's find and hit the URL
+    # from Google that gives you the user's profile information,
+    # including their Google profile image and email
+    userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
+    uri, headers, body = client.add_token(userinfo_endpoint)
+    userinfo_response = requests.get(uri, headers=headers, data=body)
+    print(f"Userinfo --{userinfo_response.json()} ")
+    # You want to make sure their email is verified.
+    # The user authenticated with Google, authorized your
+    # app, and now you've verified their email through Google!
+    if userinfo_response.json().get("email_verified"):
+        unique_id = userinfo_response.json()["sub"]
+        users_email = userinfo_response.json()["email"]
+        picture = userinfo_response.json()["picture"]
+        users_name = userinfo_response.json()["given_name"]
+        print(users_name)
+    else:
+        return "User email not available or not verified by Google.", 400
+    session['username'] = users_name
+    # Create a user in your db with the information provided
+    # by Google
+    user = Guser.query.get(unique_id)
+
+    # Doesn't exist? Add it to the database.
+    if user is None:
+        user = Guser(id=unique_id, name=users_name, email=users_email, profile_pic=picture)
+        db.session.add(user)
+        db.session.commit()
+    # Begin user session by logging the user in
+
+    login_user(user)
+    session['logged_in'] = True
+    session['googleuser'] = True
+   #message="Logged in with Google account "
+    # Send user back to homepage
+    return render_template('index.html', name=user.name, emailid =user.email,profilepic=user.profile_pic)
+
+
 #for Logout
 @app.route("/logout")
 @login_required
 def logout():
+   # loggedingoogleuser=session.get('loggedingoogleuser')
+    logout_user()
     session.pop('logged_in', None)
-    message = 'You were logged out.'
-    return render_template('index.html', message=message)
+    print(session.get('username'))
+ #   print(loggedingoogleuser)
+    message = 'You were logged out of Palghar Milers.'
+    print(session.get('googleuser'))
+    if session.get('googleuser'):
+        flash('Logout from Google')
+    return render_template('logout.html', message=message)
 
 #to display list of members
 @app.route("/members")
@@ -173,12 +286,16 @@ def registermember():
                 break
         if email==member.email:
             return render_template("index.html", message="email already exists.")
+        if username=='admin':
+            return render_template("index.html", message="Can Not Use This Username.")
     user=Member(firstname=fname, middlename=mname, lastname=lname, email=email, mobile=mobile, dob=dob, strava_id=strava_id, username=username)
 
-    db.session.add(user)
-    db.session.commit()
     if user is None:
         return render_template("index.html", message="No Such Member.")
+
+        db.session.add(user)
+        db.session.commit()
+
     mid=user.id
     if request.method == 'POST':
         file = request.files['file']
@@ -216,6 +333,7 @@ def forupdatemember():
         return render_template("index.html", message="Invalid member ID.")
     except TypeError:
         return render_template("index.html", message="No Changes Made!")
+
     if request.method == 'POST':
         file = request.files['file']
         if file:
@@ -223,7 +341,6 @@ def forupdatemember():
             file.save(os.path.relpath(f"static/uploads/{filename}"))
             ff=f"static/uploads/{filename}"
             if os.path.exists(f'static/uploads/{member_id}.jpg'):
-                print("AAAAAAAA")
                 os.remove(f'static/uploads/{member_id}.jpg')
             dd = f"static/uploads/{member_id}.jpg"
             os.rename(ff,dd)
@@ -236,6 +353,14 @@ def forupdatemember():
     member.mobile=mobile
     member.dob=dob
     member.strava_id=strava_id
+
+    if (member.username == session.get('username')) or (session.get('username') == 'admin'):
+        print(f"uuuuu :{member.username}")
+        print(session.get('username'))
+        db.session.commit()
+    else:
+        flash("Cannot update data of other members")
+        return redirect('/members')
     db.session.commit()
     return render_template("memberdetails.html", member=member)
 
@@ -246,13 +371,17 @@ def forupdatemember():
 def removemember():
     memberid = request.form.get("rmemberid")
     removemember=Member.query.get(memberid)
+    print(removemember.username)
+    print(session.get('username'))
 
     if removemember is None:
         return render_template("index.html", message="No Such Member.")
-    db.session.delete(removemember)
-    db.session.commit()
-    return render_template("index.html", message="Member Successfully Removed")
-
+    if (removemember.username == session.get('username')) or (session.get('username')=='admin'):
+        db.session.delete(removemember)
+        db.session.commit()
+        return render_template("index.html", message="Member Successfully Removed")
+    flash("Cannot remove other members")
+    return redirect('/members')
 
 #to update tshirt size of perticular member
 @app.route("/tshirtsize", methods=["POST"])
@@ -282,6 +411,7 @@ def blogs():
 
 # Display Blogs
 @app.route('/post/<int:post_id>')
+@login_required
 def post(post_id):
     post = Blogpost.query.filter_by(id=post_id).one()
 
@@ -289,16 +419,18 @@ def post(post_id):
 
 # Add new Blog
 @app.route('/add')
+@login_required
 def add():
     return render_template('add.html')
 
 @app.route('/addpost', methods=['POST'])
+@login_required
 def addpost():
     title = request.form['title']
     author = request.form['author']
     content = request.form['content']
 
-    post = Blogpost(title=title, author=author, content=content, date_posted=datetime.datetime.now())
+    post = Blogpost(title=title, author=author, content=content, date_posted=dt.datetime.now())
 
     db.session.add(post)
     db.session.commit()
@@ -311,6 +443,7 @@ def aboutus():
     return render_template("about.html")
 
 @app.route("/clubdetails/<int:club_id>")
+@login_required
 def clubdetails(club_id):
     access_token = renew_token()
     header = {'Authorization': 'Bearer ' + access_token}
@@ -327,18 +460,20 @@ def clubdetails(club_id):
     return render_template("clubdetails.html", clubdetails=clubdetails, clubadmins=clubadmins, clubmembers=clubmembers)
 
 @app.route("/for_club_data", methods=['GET', 'POST'])
+@login_required
 def for_club_data():
     club_id=request.form.get("club_id")
     members = Member.query.order_by(Member.id).all()
     return render_template("forclubdata.html", club_id=club_id,  members=members)
 
 @app.route("/club_data/<int:club_id>",  methods=['GET', 'POST'])
+@login_required
 def club_data(club_id):
     member_strava_id=request.form.get("strava_member")
     access_token = renew_token()
     str_data_date=request.form.get("data_date")
     print(member_strava_id)
-    data_date = datetime.datetime.strptime(str_data_date, '%Y-%m-%d')
+    data_date = dt.datetime.strptime(str_data_date, '%Y-%m-%d')
     fromdateepoch = data_date.timestamp()
 
 
@@ -349,7 +484,7 @@ def club_data(club_id):
     clubdata = requests.get(club_activities_url, headers=header, params=param).json()
     entries= (len(clubdata))
     print(clubdata)
-    return render_template("clubdata.html", clubdata=clubdata, entries=entries, member_strava_id=member_strava_id)
+    return render_template("clubdata.html", clubdata=clubdata, entries=entries, club_id=club_id, member_strava_id=member_strava_id)
 
 
 
@@ -435,8 +570,8 @@ def club_data(club_id):
 
 
 @app.route("/imagegallery", methods=['get','POST'])
+@login_required
 def imagegallery():
-    message=""
     image_names = os.listdir('static/images')
     if len(image_names)<=50:
         target = os.path.join(APP_ROOT, 'static/images/')
@@ -458,34 +593,128 @@ def imagegallery():
                 imgagename = uuid.uuid1()
                 renamedfilename=f"d:/cs50/workspace/palgharmilers/static/images/{imgagename}.jpg"
                 os.rename(uploadedfilename,renamedfilename)
-                message="Image Uploaded"
+                flash("Image Uploaded")
             else:
-                message="No Image Selected"
+                flash("No Image Selected")
         path, dirs, files = next(os.walk("d:/cs50/workspace/palgharmilers/static/images"))
     else:
-         message="Limit Exceeded"
+         flash("Limit Exceeded")
     image_names = os.listdir('static/images')
-    print(f"images in folder :{image_names}")
-    return render_template("imagegallery.html", image_names=image_names, message=message)
+    return render_template("imagegallery.html", image_names=image_names)
 
 
 @app.route("/imagegallery/<filename>")
+@login_required
 def send_image(filename):
-    print(filename)
     return send_from_directory('static/images', filename)
 
+
 @app.route('/deleteimages', methods=['GET', 'POST'])
+@login_required
 def deleteimages():
+    message=""
     if request.method == 'POST':
         print(f"selected images{request.form.getlist('selectedimages')}")
         selectedimages=request.form.getlist('selectedimages')
+    members = Member.query.all()
+    if session.get('username') == 'admin':
+        validmember = True
+    else:
+        for member in members:
+            if (member.username == session.get('username')) :
+                validmember=True
+            else:
+                validmember = False
+
     for image in selectedimages:
-        if os.path.exists(f"static/Images/{image}"):
+
+        if os.path.exists(f"static/Images/{image}") and validmember==True:
             print("Path Exist!!!")
             os.remove(f"static/Images/{image}")
-            message = "Deleted Selected Images"
+            flash("Deleted Selected Images")
         else:
-            message="Error"
+            flash("Error or You may not be member of Palghar Milers")
             print(message)
     image_names = os.listdir('static/images')
-    return render_template("imagegallery.html", image_names=image_names, message=message)
+    return render_template("imagegallery.html", image_names=image_names)
+
+@app.route('/calendar')
+@login_required
+def calendar():
+    today = dt.datetime.now(dt.timezone.utc)
+
+    try:
+        events = Event.query.all()
+    except Exception as e:
+        print("Error")
+        print(e)
+    start_date_list=[]
+    for event in events:
+        start_date_list.append(event.start_date)
+    nearestdate=nearest(start_date_list, today)
+    nearestevent = Event.query.filter_by(start_date=nearestdate).first()
+    nearesteventtitle = nearestevent.title
+
+    return render_template('event_calendar.html',events=events,nearestdate=nearestdate, nearesteventtitle=nearesteventtitle)
+
+def nearest(start_date_list, today):
+     return min([i for i in start_date_list if i > today], key=lambda x: abs(x - today))
+
+@app.route('/addEvent',methods=["post"])
+@login_required
+def addEvent():
+    title=request.form.get("event_title")
+    start=request.form.get("start_date")
+    end=request.form.get("end_date")
+    description=request.form.get("event_desciption")
+    addevent=Event(title=title, start_date=start, end_date=end, event_description=description)
+
+    db.session.add(addevent)
+    db.session.commit()
+
+    return render_template('event_calendar.html')
+
+@app.route("/selectedEvent/<int:event_id>")
+@login_required
+def selectedEvent(event_id):
+    selected_event = Event.query.get(event_id)
+    if selected_event is None:
+        return render_template("error.html", message="No Such Member.")
+    return render_template('events.html', selected_event=selected_event)
+
+#to updates details of existing member
+@app.route("/foreditevent",methods=["post","GET"])
+@login_required
+def foreditevent():
+    title = request.form.get("edittitle")
+    start = request.form.get("editstartdate")
+    end = request.form.get("editenddate")
+    description = request.form.get("editdescription")
+
+    try:
+        eventid = int(request.form.get("editid"))
+    except ValueError:
+        return render_template("error.html", message="Invalid member ID.")
+    except TypeError:
+        return render_template("error.html", message="No Changes Made!")
+
+    event = Event.query.get(eventid)
+    event.title=title
+    event.start_date=start
+    event.end_date=end
+    event.event_description=description
+
+    db.session.commit()
+    return redirect(url_for("calendar"))
+
+
+@app.route("/removeEvent", methods=["post", "GET"])
+@login_required
+def removeEvent():
+    eventid = request.form.get("removeeventid")
+    removeevent=Event.query.get(eventid)
+    if removeevent is None:
+        return render_template("error.html", message="No Such Member.")
+    db.session.delete(removeevent)
+    db.session.commit()
+    return render_template("event_calendar.html", message="Member Successfully Removed")

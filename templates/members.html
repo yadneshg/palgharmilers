@@ -1,80 +1,60 @@
 {% extends "layout.html" %}
+{% block heading %}
+<script src="/static/js/layout.js"></script>
+<link rel="stylesheet" href="/static/css/common.css?new Date().getTime()">
 
-{% block title %}
-Members
+<style>
+  .not-active {
+    pointer-events: none;
+    cursor: default;
+  }
+</style>
+
 {% endblock %}
 
 {% block body %}
-
-<style>
-  body,
-  html {
-    height: 100%;
-  }
-
-  .bg {
-    background-image: url("/static/background2.jpg");
-    /* The image used */
-    height: 100%;
-    /* Full height */
-    background-position: center;
-    /* Center and scale the image nicely */
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  .memberlist {
-    background-color: rgb(0, 0, 0);
-    /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.8);
-    /* Black w/opacity/see-through */
-    color: white;
-    font-weight: bold;
-    font-family: Century Gothic;
-    border: 3px solid #f1f1f1;
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    width: 50%;
-    padding: 20px;
-    text-align: justify;
-  }
-
-  .newuser {
-    text-align: right;
-
-  }
-  .not-active {
- pointer-events: none;
- cursor: default;
-}
-</style>
-<div class="memberlist">
+<div class="mainwindow">
   <h3 style="text-align:center">Members</h3>
-
+  <div class="rightalign"><button class="btn btn-success"><a href="{{url_for('forregistermember')}}">
+    <span style="color:white">Register New Member</span></a></button>
+  </div>
+  <br>
+  <hr>
   <table style="width:100%">
-
     {% for member in members %}
     <div style="line-height: 1.8;">
       <tr>
         <td>
           <a href="{{ url_for('memberdetails', member_id=member.id)}}">
-            {{ member.id }} : {{ member.firstname }} {{ member.middlename }} {{ member.lastname }}
+            {{ loop.index }} : {{ member.firstname }} {{ member.middlename }} {{ member.lastname }}
           </a>
         </td>
         <td> Mobile No.: {{member.mobile}}</td>
         <td>
-        <a class="not-active" href="{{ url_for('athlete_stats', athlete_id=member.strava_id)}}">
-         Strava ID : {{member.strava_id}}
-        </a>
+          <a class="not-active" href="{{ url_for('athlete_stats', athlete_id=member.strava_id)}}">
+            Strava ID : {{member.strava_id}}
+          </a>
         </td>
       </tr>
     </div>
     {% endfor %}
-    <div class="newuser"><a href="{{url_for('forregistermember')}}"><span style="color:green">Register New Member</span></a></div><br>
-    <hr>
-
-
-    {% endblock %}
+  </table>
+</div>
+{% with flashmessages = get_flashed_messages() %}
+      {% for flashmessage in flashmessages %}
+            {% if flashmessage %}
+          <!-- Do something with the message -->
+          <div id = "alertmsg">
+             <div class = "message">{{ flashmessage }}</div><br>
+             <button class = "btn btn-primary">OK</button>
+          </div>
+          {% endif %}
+      {% endfor %}
+{% endwith %}
+<script>
+  var alertmsgBox = $("#alertmsg");
+  alertmsgBox.find(".btn").unbind().click(function() {
+   alertmsgBox.hide();
+   });
+</script>
+{% endblock %}

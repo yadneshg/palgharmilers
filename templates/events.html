@@ -1,0 +1,127 @@
+{% extends "layout.html" %}
+{% block heading %}
+  <script src="/static/js/layout.js"></script>
+  <link rel="stylesheet" href="/static/css/common.css">
+{% endblock %}
+
+{% block body %}
+  <style>
+    /* The Close Button */
+    .close {
+      color: #aaaaaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #ffffff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .selectedEventWindow {
+      background-color: rgb(0,0,0);
+      /* Fallback color */
+      background-color: rgba(0,0,0, 0.9);
+      /* Black w/opacity/see-through */
+      color: white;
+      font-weight: bold;
+      border: 3px solid #f1f1f1;
+      position: absolute;
+      top: 350px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      width: 40%;
+      padding: 20px;
+      overflow: auto;
+    }
+    .editEventWindow {
+      background-color: rgb(0,0,0);
+      /* Fallback color */
+      background-color: rgba(0,0,0, 0.9);
+      /* Black w/opacity/see-through */
+      color: white;
+      font-weight: bold;
+      border: 3px solid #f1f1f1;
+      position: absolute;
+      top: 350px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 11;
+      width: 40%;
+      padding: 20px;
+      overflow: auto;
+    }
+  </style>
+
+
+    <div class="mainwindow" id="selectedEventWindow">
+      <button class="btn btn-primary" id="foreditevent" onclick="visibleonclick()">Edit Event </button>
+      <a href="{{ url_for('calendar')}}" class="btn btn-primary">Back</a>
+      <h3>Event Details</h3>
+      <div class="eventid" id="eventid"></div>
+      <ul class="eventdetails">
+        <li>ID: <span id="eventid">{{ selected_event.id }}</span></li>
+        <li>Title: {{ selected_event.title }} </li>
+        <li>Start Date : {{ selected_event.start_date }}</li>
+        <li>End Date : {{ selected_event.end_date }}</li>
+        <li>Description: {{ selected_event.event_description }}</li>
+      </ul>
+
+      <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mr-2" role="group" aria-label="First group">
+          <form action="{{url_for('removeEvent')}}" id="removeEvent" method="post">
+            <input type="hidden" id="removeeventid" name="removeeventid" value="{{selected_event.id}}">
+
+            <button class="btn btn-danger" id="removeEvent" onclick="ConfirmDelete()" type="button" name="button">Remove Event</button>
+          </form>
+        </div>
+      </div>
+  </div>
+
+  <div class="mainwindow" id="editevent" style="display:none">
+      <span onclick="document.getElementById('editevent').style.display='none'" class="close" title="Close">&times;</span>
+
+      <form action="{{url_for('foreditevent')}}" method="post" name="form3">
+
+        ID : {{selected_event.id}} <input type="hidden" id="editid" name="editid" value="{{selected_event.id}}" /><br>
+        Title : <br> <input type="text" class="mm" name="edittitle" id="edittitle" value="{{ selected_event.title }}" autocomplete="off" autofocus><br>
+
+        <div id="datetimepicker">
+          <label for="start_date">Start Date:</label>
+          <input type="text" id="editstartdate" name="editstartdate" value="{{ selected_event.start_date }}" autocomplete="off" autofocus>
+          <span class="add-on">
+            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+          </span><br><br>
+
+          <label for="end_date">End Date:</label>
+          <input type="text" name="editenddate" id="editenddate" value="{{ selected_event.end_date }}" autocomplete="off" autofocus>
+          <span class="add-on">
+            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+          </span><br><br>
+        </div>
+
+        Description : <br><input type="text" class="mm" name="editdescription" id="editdescription" value="{{ selected_event.event_description }}" autocomplete="off" autofocus><br>
+        <button class="btn btn-primary" id="editEvent" type="submit">Edit</button>
+        <a href="{{ url_for('calendar')}}" class="btn btn-primary">Back</a>
+      </form>
+  </div>
+
+  <script>
+  function visibleonclick() {
+    document.querySelector('#editevent').style.display = "initial";
+  }
+    </script>
+    <script>
+      function ConfirmDelete() {
+        var x = confirm("Are you sure you want to delete?");
+        if (x)
+          document.getElementById("removeEvent").submit();
+        else
+          return false;
+      }
+    </script>
+
+      {% endblock %}

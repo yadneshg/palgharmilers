@@ -1,44 +1,26 @@
 {% extends "layout.html" %}
+
+{% block heading %}
+    <link rel="stylesheet" href="/static/css/common.css?new Date().getTime()">
+    <style>
+       img.logo {
+         width: 20%;
+         border-radius: 50%;
+       }
+       .mainwindow {
+         background-image: url("/static/PTR5683.jpg");
+     </style>
+{% endblock %}
+
 {% block body %}
-<style>
-  body,
-  html {
-    height: 100%;
-  }
+  <!-- Page Header -->
 
-  .bg {
-    background-image: url("/static/background2.jpg");
-    height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
+  <div class="mainwindow" id="about">
+    <div class="centeralign">
 
-  .aboutwindow {
-    background-color: rgb(0, 0, 0);
-    /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.8);
-    /* Black w/opacity/see-through */
-    color: white;
-    font-weight: bold;
-    font-family: Century Gothic;
-    border: 3px solid #f1f1f1;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    width: 60%;
-    padding: 20px;
-    text-align: justify;
-  }
-</style>
-<!-- Page Header -->
-<div class="aboutwindow" id="about">
-  <div style="text-align:center">
-    <h3>Palghar Milers</h3>
-  </div>
-  <div class="container">
+    <img src="/static/cyclinglogo.jpg" alt="cycling Logo" class="logo">
+      <h3>Palghar Milers</h3>
+      </div>
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
         <p> Palghar Milers have been promoting cycling, Trekking and other sports activities for over 5 years. We are an active, community-based club with members from different age categories.
@@ -52,5 +34,5 @@
       </div>
     </div>
   </div>
-</div>
+
 {% endblock %}

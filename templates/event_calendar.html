@@ -1,0 +1,188 @@
+{% extends "layout.html" %}
+
+{% block heading %}
+<script src="/static/js/layout.js"></script>
+<link rel="stylesheet" href="/static/css/common.css?new Date().getTime()">
+
+<style>
+  #wrap {
+    width: 1100px;
+    margin: 0 auto;
+  }
+
+  #calendar {
+    margin: 0 auto;
+    width: 100%;
+    background-color: #F3F3F3;
+    box-shadow: 0 1px 2px #C3C3C3;
+  }
+
+  .largemainwindow {
+    transform: translate(-50%, -50%);
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: blue;
+    font-weight: bold;
+    border: 3px solid #808080;
+    z-index: 4;
+    width: 800px;
+    height: 580px;
+    top: 360px;
+    left: 50%;
+    text-align: justify;
+    overflow: auto;
+    margin: 0 auto;
+    padding: 10px;
+  }
+
+  .onclickwindow {
+    display: none;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    border: 3px solid #808080;
+    z-index: 4;
+    padding: 100px;
+    top: 300px;
+    left: 50%;
+    width: 700px;
+    height: 500px;
+    overflow: auto;
+    text-align: left;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.9);
+
+  }
+
+  #alertmsg {
+    display: none;
+    background-color: lightblue;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<link rel='stylesheet' href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="http://tarruda.github.com/bootstrap-datetimepicker/assets/css/bootstrap-datetimepicker.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script src="https://momentjs.com/downloads/moment.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.js'></script>
+<script type="text/javascript" src="http://tarruda.github.com/bootstrap-datetimepicker/assets/js/bootstrap-datetimepicker.min.js">
+</script>
+
+
+<div id='wrap' class="largemainwindow">
+  <button class="btn btn-primary" id="addEvent">Add Event</button>
+  <button class="btn btn-secondary" id="eventDetail"> Event Details</button>
+  <button onclick="nextEvent()" class="btn btn-success" id="showEvent">Next Event</button>
+  <div id="addEventModal" class="onclickwindow">
+    <span onclick="document.getElementById('addEventModal').style.display='none'" class="close" title="Close">&times;</span>
+
+    <form action="{{url_for('addEvent')}}" method="post">
+      <label for="event_title">Title:</label>
+      <input type="text" id="event_title" name="event_title" placeholder="Cycling" required><br><br>
+
+      <div id="datetimepicker">
+        <label for="start_date">Start Date:</label>
+        <input type="text" id="start_date" name="start_date" placeholder="dd/MM/yyyy hh:mm:ss" required>
+        <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span><br><br>
+
+        <label for="end_date">End Date:</label>
+        <input type="text" id="end_date" name="end_date" placeholder="dd/MM/yyyy hh:mm:ss" required>
+        <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span><br><br>
+      </div>
+
+      <label for="event_desciption">Event Description:</label>
+      <input type="text" id="event_desciption" name="event_desciption" placeholder="Description about Event"><br><br>
+      <input class="btn btn-primary" type="submit" value="Submit">
+    </form>
+  </div>
+  <div id="alertmsg">
+    <div class="message">Next Event : {{nearesteventtitle}} on {{nearestdate}}</div><br>
+    <button class="btn btn-primary">OK</button>
+  </div>
+  <div id="eventDetailModal" class="onclickwindow">
+    <span onclick="document.getElementById('eventDetailModal').style.display='none'" class="close" title="Close">&times;</span>
+    <ol>
+      {% for event in events %}
+      <div style="text-align:left">
+        <li><a href="{{ url_for('selectedEvent', event_id=event.id)}}">
+            {{ event.title }}, on : {{ event.start_date }}
+          </a></li>
+      </div>
+      {% endfor %}
+    </ol>
+  </div>
+
+  <div id='calendar' class="calendar"></div>
+
+  <div style='clear:both'></div>
+</div>
+
+<script>
+  var modal = document.getElementById("addEventModal");
+  var btn = document.getElementById("addEvent");
+  btn.onclick = function() {
+    modal.style.display = "block";
+  }
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+  var editmodal = document.getElementById("eventDetailModal");
+  var editbtn = document.getElementById("eventDetail");
+  editbtn.onclick = function() {
+    editmodal.style.display = "block";
+  }
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      editmodal.style.display = "none";
+    }
+  }
+
+  function nextEvent(msg, myYes) {
+    var alertmsgBox = $("#alertmsg");
+    alertmsgBox.find(".message").text(msg);
+    alertmsgBox.find(".btn").unbind().click(function() {
+      alertmsgBox.hide();
+    });
+    alertmsgBox.find(".btn").click(myYes);
+    alertmsgBox.show();
+  }
+
+
+  $(function() {
+    $('#datetimepicker').datetimepicker({
+      format: 'dd/MM/yyyy hh:mm:ss',
+      language: 'pt-BR'
+    });
+    $('#calendar').fullCalendar({
+      defaultView: 'month',
+      eventRender: function(eventObj, $el) {
+        $el.popover({
+          title: eventObj.title,
+          content: eventObj.description,
+          trigger: 'hover',
+          placement: 'top',
+          container: 'body'
+        });
+      },
+
+      events: [
+      {% for eventrow in events %}
+      {
+          title: '{{eventrow.title}}',
+          description: '{{eventrow.event_description}}',
+          start: '{{eventrow.start_date}}'
+      },
+      {% endfor %}
+      ]
+    });
+  });
+</script>
+
+{% endblock %}

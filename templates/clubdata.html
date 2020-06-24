@@ -1,12 +1,13 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
+{% block heading %}
+<script src="/static/js/layout.js"></script>
+<link rel="stylesheet" href="/static/css/common.css?new Date().getTime()">
 
-<head>
-  <title>Strava</title>
-</head>
+{% endblock %}
 
-<body>
-  Welcome !! 
+{% block body %}
+<div class="mainwindow" id="clubdata">
+  <a href="{{ url_for('clubdetails', club_id = 264954)}}"  class="close" title="Close">&times;</a>
   <ol>
     {% for data in clubdata[:entries] %}
 
@@ -21,11 +22,10 @@
         <li>Total Elevation Gain : {{data.total_elevation_gain}} mtrs.</li>
         <li>Type of Ride : {{data.type}}</li>
         <li>Type of Workout : {{data.workout_type}}</li>
+        <hr>
       </ul>
     </li>
     {% endfor %}
   </ol>
-
-</body>
-
-</html>
+</div>
+{% endblock %}

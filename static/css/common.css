@@ -1,0 +1,105 @@
+
+.mainwindow {
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  font-weight: bold;
+  border: 3px solid #f1f1f1;
+  z-index: 4;
+  width: 700px;
+  height: 540px;
+  top:380px;
+  left:50%;
+  overflow: auto;
+  text-align: justify;
+  margin:0 auto;
+  padding:10px;
+  position:fixed;
+
+}
+.overmainwindow {
+  transform: translate(-50%, -50%);
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  font-weight: bold;
+  border: 3px solid #f1f1f1;
+  z-index: 4;
+  width: 700px;
+  height: 500px;
+  top:380px;
+  left:50%;
+  text-align: justify;
+  overflow: auto;
+  margin:0 auto;
+  padding:10px;
+  border-radius:20px;
+}
+/* The Close Button (x) */
+.close {
+position: absolute;
+right: 10px;
+top: 10px;
+color:   #d64e42;
+font-size: 25px;
+font-weight: bold;
+display:inline-block;
+padding:2px 5px;
+background:white;
+border-radius: 50%;
+}
+
+.close:hover,
+.close:focus {
+color:  #a90a0b;
+cursor: pointer;
+display:inline-block;
+padding:2px 5px;
+background:#ccc;
+border-radius: 50%;
+}
+#alertmsg {
+   background-color: #f2f2f2;
+   border: 3px solid #808080;
+   border-radius: 15px;
+   position: fixed;
+   width: 500px;
+   height:100px;
+   left: 40%;
+   top: 50%;
+   margin-left: -100px;
+   padding: 6px 8px 8px;
+   box-sizing: border-box;
+   text-align: center;
+   font-size: 15px;
+   z-index: 13;
+   float: left;
+ }
+ #alertmsg button {
+   background-color: blue;
+   display: inline-block;
+   border-radius: 5px;
+   border: 1px solid #808080;
+   padding: 5px;
+   text-align: center;
+       width: 80px;
+       cursor: pointer;
+    }
+    #alertmsg .message {
+       text-align: center;
+       color:black;
+    }
+    .rightalign {
+      text-align: right;
+    }
+
+    .centeralign {
+      text-align: center;
+    }
+    .leftalign {
+      text-align: left;
+      padding:25px;
+    }
+    h3 {
+      text-align: center;
+    }

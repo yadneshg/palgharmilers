@@ -1,141 +1,20 @@
 {% extends "layout.html" %}
+{% block heading %}
+  <script src="/static/js/allscripts.js"></script>
+  <link rel="stylesheet" href="/static/css/common.css?new Date().getTime()">
+{% endblock %}
+
 {% block body %}
-<style>
-  body,
-  html {
-    height: 100%;
-  }
 
-  .bg {
-    background-image: url("/static/background2.jpg");
-    height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  .athletedetailswindow {
-    background-color: rgb(0, 0, 0);
-    /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.8);
-    /* Black w/opacity/see-through */
-    color: white;
-    font-weight: bold;
-    border: 3px solid #f1f1f1;
-    position: absolute;
-    top: 350px;
-    left: 700px;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    width: 600px;
-    height: 500px;
-    padding: 5px 5px;
-  }
-  .athletestatswindow {
-    background-color: rgb(0, 0, 0);
-    /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.8);
-    /* Black w/opacity/see-through */
-    color: white;
-    font-weight: bold;
-    border: 3px solid #f1f1f1;
-    position: absolute;
-    top: 350px;
-    left: 700px;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    width: 600px;
-    height: 500px;
-    padding: 5px 5px;
-  }
-
-  .activitywindow {
-    background-color: rgb(0, 0, 0);
-    /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.9);
-    /* Black w/opacity/see-through */
-    color: white;
-    font-weight: bold;
-    border: 3px solid #f1f1f1;
-    position: absolute;
-    top: 350px;
-    left: 700px;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    width: 600px;
-    height: 600px;
-    padding: 5px 5px;
-  }
-
-  .forrightalign {
-    text-align: right;
-    text-decoration-color: white;
-  }
-
-  .forcenteralign {
-    text-align: center;
-    text-decoration-color: white;
-  }
-
-  .forleftalign {
-    text-align: left;
-    padding: 25px;
-  }
-  .forleftalign1 {
-    text-align: left;
-    padding: 15px;
-    padding-left: 70px;
-    padding-right: 70px;
-  }
-
-  /* SCROLL BAR */
-  /* width */
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #888;
-  }
-
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-
-  /* The Close Button (x) */
-  .close {
-    position: absolute;
-    right: 25px;
-    top: 0;
-    color: white;
-    font-size: 35px;
-    font-weight: bold;
-  }
-
-  .close:hover,
-  .close:focus {
-    color: blue;
-    cursor: pointer;
-  }
-  hr {
-  border-top: 2px solid blue;
-}
-</style>
-
-<div id="stats" class="athletestatswindow">
-  <div class="forrightalign">
+<div id="stats" class="mainwindow">
+  <div class="rightalign">
 <a href="{{ url_for('members')}}" class="btn btn-primary">Back</a>
 </div>
   <br><br>
-  Statistics for Strava ID {{athlete_id}}
+  <div class="centeralign">
+  <h4>Statistics for Strava ID {{athlete_id}}</h4>
   <hr>
-  <div class="forcenteralign">
+
     {% if athletestats.biggest_ride_distance %}
     Biggest Ride Distance : {{athletestats.biggest_ride_distance/1000}} Kms. <br>
     {% endif %}
@@ -143,22 +22,18 @@
       {% if athletestats.biggest_climb_elevation_gain %}
     Biggest Climb Elevation Gain : {{athletestats.biggest_climb_elevation_gain}} Mts. <br>
     {% endif %}
-    <hr>
-  </div>
-  <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-    <div class="btn-group mr-2" role="group" aria-label="First group">
-      <div class="forleftalign">
+    <hr><br><br>
+    <span>
         <button class="btn btn-primary" id="rides1" onclick="visibleonclick()">Cycling Data</button>
         <button class="btn btn-primary" id="runs1" onclick="visibleonclick1()">Running Data</button>
         <button class="btn btn-primary" id="swims1" onclick="visibleonclick2()">Swimming Data</button>
-      </div>
+      </span>
     </div>
   </div>
-</div>
 
-<div id="rides" class="activitywindow" style="display:none">
+<div id="rides" class="mainwindow" style="display:none">
   <span onclick="document.getElementById('rides').style.display='none'" class="close" title="Close">&times;</span>
-  <div class="forleftalign1">
+  <div class="leftalign">
     Athlete's Recent Rides :<br>
     {% if athletestats.recent_ride_totals %}
     No. of Rides : {{athletestats.recent_ride_totals['count']}} <br>
@@ -189,9 +64,9 @@
     <hr>
   </div>
 </div>
-<div id="runs" class="activitywindow" style="display:none">
+<div id="runs" class="mainwindow" style="display:none">
   <span onclick="document.getElementById('runs').style.display='none'" class="close" title="Close">&times;</span>
-  <div class="forleftalign1">
+  <div class="leftalign">
     Athlete's Recent Runs :<br>
       {% if athletestats.recent_run_totals %}
     No. of Runs : {{athletestats.recent_run_totals['count']}} <br>
@@ -222,9 +97,9 @@
     <hr>
   </div>
 </div>
-<div id="swims" class="activitywindow" style="display:none">
+<div id="swims" class="mainwindow" style="display:none">
   <span onclick="document.getElementById('swims').style.display='none'" class="close" title="Close">&times;</span>
-  <div class="forleftalign1">
+  <div class="leftalign">
     Athlete's Recent Swims :<br>
       {% if athletestats.recent_swim_totals %}
     No. of Swims : {{athletestats.recent_swim_totals['count']}} <br>
@@ -254,19 +129,4 @@
     {% endif %}
   </div>
 </div>
-<script>
-
-function visibleonclick1() {
-  document.querySelector('#runs').style.display = "initial";
-}
-  function visibleonclick2() {
-    document.querySelector('#swims').style.display = "initial";
-  }
-  function visibleonclick() {
-    document.querySelector('#rides').style.display = "initial";
-  }
-  function visibleonclick3() {
-    document.querySelector('#stats').style.display = "initial";
-  }
-</script>
 {% endblock %}

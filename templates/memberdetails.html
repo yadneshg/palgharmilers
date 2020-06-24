@@ -1,98 +1,27 @@
 {% extends "layout.html" %}
-{% block body %}
+{% block heading %}
+  <script src="/static/js/layout.js"></script>
+  <link rel="stylesheet" href="/static/css/common.css?new Date().getTime()">
+
 <style>
-  body,
-  html {
-    height: 100%;
-  }
 
-  .bg {
-    background-image: url("/static/background2.jpg");
-    height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  .imageid {
-    text-align: center;
-  }
-
-  .updatememberwindow {
-    background-color: rgb(0, 0, 0);
-    /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.8);
-    /* Black w/opacity/see-through */
+  .stravarides {
+    transform: translate(-50%, -50%);
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.9);
     color: white;
     font-weight: bold;
     border: 3px solid #f1f1f1;
-    position: absolute;
-    top: 200px;
-    left: 300px;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    width: 600px;
+    z-index: 4;
+    width: 700px;
     height: 500px;
-    padding: 5px 5px;
-    padding-left:25px;
-  }
-
-  .memberwindow {
-    background-color: rgb(0, 0, 0);
-    /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.8);
-    /* Black w/opacity/see-through */
-    color: white;
-    font-weight: bold;
-    border: 3px solid #f1f1f1;
-    position: absolute;
-    top: 350px;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    width: 40%;
-    padding: 20px;
-  }
-
-  .tshirtsize {
-    background-color: rgb(0, 0, 0);
-    /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.8);
-    /* Black w/opacity/see-through */
-    color: white;
-    font-weight: bold;
-    border: 3px solid #f1f1f1;
-    position: absolute;
-    top: 60%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    width: 50%;
-    padding: 20px;
-    text-align: left;
-
-  }
-
-  .mdetails {
-    text-align: left;
-  }
-
-  .stravarides1 {
-    background-color: rgb(0, 0, 0);
-    /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.8);
-    /* Black w/opacity/see-through */
-    color: white;
-    font-weight: bold;
-    border: 3px solid #f1f1f1;
-    position: absolute;
-    top: 75%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    width: 80%;
-    padding: 20px;
-    text-align: left;
+    top:380px;
+    left:50%;
+    text-align: justify;
+    overflow: auto;
+    margin:0 auto;
+    padding:10px;
+    border-radius:20px;
   }
 
   input[type=text],
@@ -114,78 +43,52 @@
     text-align: center;
   }
 
-  /* The Close Button (x) */
-  .close {
-    position: absolute;
-    right: 25px;
-    top: 0;
-    color: white;
-    font-size: 35px;
-    font-weight: bold;
+  form {
+       display: inline-block;
   }
 
-  .close:hover,
-  .close:focus {
-    color: blue;
-    cursor: pointer;
-  }
-  /* SCROLL BAR */
-  /* width */
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #888;
-  }
-
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
 </style>
+{% endblock %}
 
-<div class="memberwindow" id="memberdetails">
+{% block body %}
+<div class="mainwindow" id="memberdetails">
+  <a href="{{ url_for('members')}}"  class="close" title="Close">&times;</a>
   <h3>Member Details</h3>
-  <div class="imageid" id="imageid"></div>
-  <ul class="mdetails">
+  <div class="centeralign" id="imageid"></div>
+  <hr>
+  <ul class="leftalign">
     <li>ID: <span id="memberid">{{ member.id }}</span></li>
     <li>Name: {{ member.firstname }} {{ member.middlename }} {{ member.lastname }}</li>
     <li>Email ID : {{ member.email }}</li>
     <li>Mobile No. : {{ member.mobile }}</li>
     <li>Date of Birth: {{ member.dob }}</li>
   </ul>
-
-  <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-    <div class="btn-group mr-2" role="group" aria-label="First group">
-      <form action="{{url_for('removemember')}}" id="removemember" method="post">
+        <form action="{{url_for('removemember')}}" id="removemember" class="leftalign" method="post">
         <input type="hidden" id="mid" name="rmemberid" value="{{member.id}}">
-        <button class="btn btn-primary" id="removemember" onclick="ConfirmDelete()" type="button" name="button">Remove Member</button>
+        <button class="btn btn-danger" id="removemember" onclick="ConfirmDelete()" type="button" name="button">Remove Member</button>
       </form>
-      <button class="btn btn-primary" id="forupdatemember" onclick="visibleonclick()">Update Details </button>
-      <button class="btn btn-primary" id="tshirtsize" onclick="visibleonclick1()">T-Shirt size </button>
-      <a class="btn btn-primary" href="{{ url_for('athlete_stats', athlete_id=member.strava_id)}}">Strava Statistics</a>
-      <a href="{{ url_for('members')}}" class="btn btn-primary">Members List</a>
-    </div>
-  </div>
 
-  <div class="myDiv" id="updatemember" style="display:none">
-      <div style="overflow-y: scroll;" class="updatememberwindow">
+      <span>
+        <button class="btn btn-primary" id="forupdatemember" onclick="visibleonclick()">Update Details </button>
+        <button class="btn btn-primary" id="tshirtsize" onclick="visibleonclick1()">T-Shirt size </button>
+        <a class="btn btn-primary" href="{{ url_for('athlete_stats', athlete_id=member.strava_id)}}">Strava Statistics</a>
+      </span>
+      </div>
+
+
+  <div class="centeralign" id="updatemember" style="display:none">
+      <div class="mainwindow">
       <span onclick="document.getElementById('updatemember').style.display='none'" class="close" title="Close">&times;</span>
+      <h3>Update Member Details</h3>
       <form action="{{url_for('forupdatemember')}}" method="post" name="form3" enctype=multipart/form-data>
         <label>
           <input type="file" id="file" name=file accept=".gif,.jpg,.jpeg,.png"><br><br>
-          <div class="imageid" id="imageid1"></div>
+          <div class="centeralign" id="imageid1"></div>
         </label>
-
         <p class="small"> click on image to update</p>
-        ID : {{member.id}} <input type="hidden" id="updateid" name="updateid" value="{{member.id}}" /><br>
+        <hr>
+        <div class="leftalign">
+        <input type="hidden" id="updateid" name="updateid" value="{{member.id}}" /><br>
         First Name : <br> <input type="text" class="mm" name="updatefname" id="updatefname" value="{{ member.firstname }}" autocomplete="off" autofocus><br>
         Middle Name :<br> <input type="text" class="mm" name="updatemname" id="updatemname" value="{{ member.middlename }}" autocomplete="off" autofocus><br>
         Last Name : <br><input type="text" class="mm" name="updatelname" id="updatelname" value="{{ member.lastname }}" autocomplete="off" autofocus><br>
@@ -193,31 +96,40 @@
         Mobile No. : <br><input class="mm" type="number" id="updatemobile" name="updatemobile" value="{{ member.mobile }}" required><br>
         Date of Birth : <br><input type="date" name="updatedob" id="updatedob" value="{{ member.dob }}"><br>
         Strava ID : <br><input class="mm" type="number" id="stravaid" name="stravaid" value="{{ member.strava_id }}" placeholder="Strava ID" required><br><br>
+        </div>
+        <div class="centeralign">
         <button class="btn btn-primary" id="regstermember" type="submit" value="Update">Update</button>
+        </div>
       </form>
     </div>
   </div>
-  <hr>
 
-  <div class="myDiv" id="t_size" style="display:none">
-    <div class="tshirtsize">
+  <div class="mainwindow" id="t_size" style="display:none">
+      <h3>T-Shirt Size and Number</h3>
+      <div class="centeralign" id="tshirtimageid"><br><br>
+        <img class='rounded-circle' width='100px' height='100px' src='/static/tshirt.jpg?' + new Date().getTime()>
+
+      </div>
+      <hr>
       <span onclick="document.getElementById('t_size').style.display='none'" class="close" title="Close">&times;</span>
+
       <form id="frm" action="{{ url_for('tshirtsize') }}" method="post">
+        <div class="leftalign">
         <input type="hidden" id="mid" name="tshirtmemberid" value="{{member .id}}">
         Name : {{member.firstname}} <br>
-        <input class="form-control" type="number" id="tshirtsize" name="tshirtsize" placeholder="size" min="0" required>
-        <input class="form-control" type="number" id="tshirtnumber" name="tshirtnumber" placeholder="Number" required>
+        Size : <input class="form-control" type="number" id="tshirtsize" name="tshirtsize" placeholder="size" min="0" required><br>
+        No. &nbsp: <input class="form-control" type="number" id="tshirtnumber" name="tshirtnumber" placeholder="Number" min="0" required><br><br>
+        </div>
+        <div class="centeralign">
         <button id="" type="submit" class="btn btn-primary">Update Details</button>
+        </div>
       </form>
     </div>
-  </div>
   <div class="stravarides" id="stravarides" style="display:none">
-    <div class="stravarides1">
       <span onclick="document.getElementById('stravarides').style.display='none'" class="close" title="Close">&times;</span>
       Strava latest Five Rides <br>
       <iframe allowtransparency frameborder='0' height='454' scrolling='no' src='https://www.strava.com/clubs/264954/latest-rides/4f78dcf9bb85d45769d7b5bb687baeccecb9aa15?show_rides=true' width='300'></iframe>
     </div>
-  </div>
 
   <script>
     var memberid = document.querySelector('#memberid');
@@ -228,6 +140,7 @@
       return imagesrc;
     }
     document.querySelector("#imageid").innerHTML = changeImage(memberid);
+
   </script>
 
   <script>

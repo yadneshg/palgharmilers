@@ -1,7 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Palghar Milers</title>
   <style>
+    body,
+    html {
+      height: 100%;
+    }
+    .bg {
+      background-image: url("/static/PTR4800.jpg");
+      height: 100%;
+      width:100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
     .logo-palgharmilers {
       width: 46px;
       height: 40px;
@@ -9,31 +22,47 @@
       overflow: hidden;
       margin-top: -6px;
     }
-    #para {
+    #caption {
       font-size: 17px;
       font-family: Lucida Handwriting;
       font-weight: bold;
-      color: black;
+      color:blue;
       text-align: center;
-      background-color: lightblue;
+      /* position: absolute;
+      top: 18%;
+      left: 50%;
+      transform: translate(-50%, -50%); */
     }
   </style>
+  <script src="/static/js/allscripts.js"></script>
+  <link rel="stylesheet" href="/static/css/common.css?new Date().getTime()">
+  {% block heading %}
+  {% endblock %}
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <title>Palghar Milers</title>
-</head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <link rel='stylesheet' href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css" />
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" >
+  <link rel="stylesheet" href="http://tarruda.github.com/bootstrap-datetimepicker/assets/css/bootstrap-datetimepicker.min.css" type="text/css" media="screen" >
 
-<body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.js'></script>
+  <script src="http://tarruda.github.com/bootstrap-datetimepicker/assets/js/bootstrap-datetimepicker.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</head>
 
+<body class="bg">
   <div class="container-fluid">
-    <nav class="navbar navbar-dark bg-dark">
+
+    <nav class="navbar navbar-dark bg-primary">
       <!-- Logo with home link -->
       <a class="navbar-brand" href="{{ url_for('index')}}">
         <div class="logo-palgharmilers">
@@ -44,39 +73,28 @@
       <a class="navbar-brand" href="{{ url_for('blogs')}}">Blogs</a>
       <a class="navbar-brand" href="{{ url_for('imagegallery')}}">Images</a>
       <a class="navbar-brand" href="{{ url_for('aboutus')}}">About Us</a>
+        <a class="navbar-brand" href="{{ url_for('calendar')}}">Calendar</a>
       <a class="navbar-brand" href="{{ url_for('clubdetails', club_id=264954)}}">Strava</a>
-      <a class="navbar-brand" href="https://www.strava.com/login">Strava Login</a>
-      <!-- Google search option -->
+      <!-- Google search option
       <form name="searchform" id="searchform" action="http://www.google.com/search" method="get" class="form-inline" target="_blank">
         <input class="form-control mr-sm-2" type="text" name="q" placeholder="Google Search" autocomplete="off" aria-label="Search">
         <button onclick="submitForm()" class="btn btn-outline-primary" type="button" value="search"><i class="fa fa-search"></i></button>
       </form>
-
+      -->
       {% if session['logged_in'] == True %}
         <a class="navbar-brand" href="{{ url_for('logout')}}">Logout</a>
       {% else %}
         <a class="navbar-brand" href="{{ url_for('login')}}">Login</a>
       {% endif %}
-
     </nav>
     <!-- Caption -->
-    <div class="col-12" id="para">
-      <div class="para">Until you step into the unknown, you don’t know what you are made of... !</div>
-    </div>
+      <div class="caption col-12" id="caption">
+        Until you step into the unknown, you don’t know what you are made of... !
+      </div><br>
   </div>
-
-  <div class="bg"></div>
-
-  {% block body %}
-  {% endblock %}
-
-  <script>
-    function submitForm() {
-      var frm = document.getElementsByName('searchform')[0];
-      frm.submit(); // Submit the form
-      frm.reset(); // Reset all form data
-      return false; // Prevent page refresh
-    }
-  </script>
+  <div >
+    {% block body %}
+    {% endblock %}
+  </div>
 </body>
 </html>

@@ -1,54 +1,9 @@
 {% extends "layout.html" %}
-{% block body %}
+{% block heading %}
+<script src="/static/js/allscripts.js"></script>
+<link rel="stylesheet" href="/static/css/common.css?new Date().getTime()">
+
 <style>
-  body,
-  html {
-    height: 100%;
-  }
-
-  .bg {
-    background-image: url("/static/background2.jpg");
-    height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  .clubdetails {
-    background-color: rgb(0, 0, 0);
-    /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.8);
-    /* Black w/opacity/see-through */
-    color: white;
-    font-weight: bold;
-    font-family: Century Gothic;
-    border: 3px solid #f1f1f1;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    width: 40%;
-    padding: 20px;
-    text-align: justify;
-  }
-  .clubmembers {
-    background-color: rgb(0, 0, 0);
-    /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.9);
-    /* Black w/opacity/see-through */
-    color: white;
-    font-weight: bold;
-    border: 3px solid #f1f1f1;
-    position: absolute;
-    top: 240px;
-    left: 300px;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    width: 600px;
-    height: 600px;
-    padding: 5px 5px;
-  }
 
   .forrightalign {
     text-align: right;
@@ -64,6 +19,7 @@
     text-align: left;
     padding: 25px;
   }
+
   .forleftalign1 {
     text-align: left;
     padding: 15px;
@@ -91,29 +47,21 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
-
-  /* The Close Button (x) */
-  .close {
-    position: absolute;
-    right: 25px;
-    top: 0;
-    color: white;
-    font-size: 35px;
-    font-weight: bold;
-  }
-
-  .close:hover,
-  .close:focus {
-    color: blue;
-    cursor: pointer;
+  img.logo {
+    width: 20%;
+    border-radius: 50%;
   }
 </style>
+{% endblock %}
+
+{% block body %}
 <!-- Page Header -->
-<div class="clubdetails" id="clubdetails">
-  <div style="text-align:center">
-    <h3>Palghar Milers</h3>
-  </div>
+<div class="mainwindow" id="clubdetails">
+  <div class="centeralign">
+<img src="/static/cyclinglogo.jpg" alt="cycling Logo" class="logo">
+</div>
   <h3> Club Deails </h3>
+  <div class="leftalign">
   Club ID : {{clubdetails[0].id}} <br>
   Name of Club : {{clubdetails[0].name}}<br>
   Address : {{clubdetails[0].city}}, {{clubdetails[0].state}}, {{clubdetails[0].country}}<br>
@@ -126,27 +74,24 @@
     </li>
     {% endfor %}
   </ul>
-  <button class="btn btn-primary" id="forclubmember" onclick="visibleonclick()">Members in Palghar Milers </button>
+  <h4><a id="forclubmember" href="" onclick="clubvisibleonclick()">Members in Palghar Milers</a></h4>
+  <div class="rightalign">
   <a class="btn btn-primary" href="{{ url_for('for_club_data')}}">Club Data in Palghar Milers</a>
+</div>
+</div>
+</div>
+  <div class="mainwindow" id="clubmembers" style="display:none">
+        <span onclick="document.getElementById('clubmembers').style.display='none'" class="close" title="Close">&times;</span>
+        <h3> Club Members </h3>
+        <div class="leftalign">
+        <ol>
+          {% for clubmember in clubmembers %}
+          <li>
+            {{clubmember.firstname}} {{clubmember.lastname}}
+          </li>
+          {% endfor %}
+        </ol>
+        </div>
+      </div>
 
-
-  <div class="clubmembers" id="clubmembers" style="overflow-y: scroll; display:none">
-    <span onclick="document.getElementById('clubmembers').style.display='none'" class="close" title="Close">&times;</span>
-    <h3> Club Members </h3>
-    <ol>
-      {% for clubmember in clubmembers %}
-      <li>
-        {{clubmember.firstname}} {{clubmember.lastname}}
-      </li>
-      {% endfor %}
-    </ol>
-  </div>
-  <script>
-    function visibleonclick() {
-      document.querySelector('#clubmembers').style.display = "initial";
-    }
-    function visibleonclick1() {
-      document.querySelector('#clubdata').style.display = "initial";
-    }
-  </script>
   {% endblock %}

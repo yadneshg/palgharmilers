@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block heading %}
+<style>
+.message {
+  color: black;
+  font-weight: bold;
+  font-family: Castellar;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+</style>
+  {% endblock %}
+  {% block body %}
+
+
+  <div class="message">
+    {{ message }}
+  </div>
+   <br><br>
+  {% with flashmessages = get_flashed_messages() %}
+        {% for flashmessage in flashmessages %}
+              {% if flashmessage=="Logout from Google" %}
+            <!-- Do something with the message -->
+            <div class="message">
+            <a class="button" href="http://www.google.com"> {{ flashmessage }}</a>
+            </div>
+            {% endif %}
+        {% endfor %}
+  {% endwith %}
+  {% endblock %}

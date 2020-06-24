@@ -1,0 +1,46 @@
+body,
+html {
+  height: 100%;
+}
+.bg {
+  background-image: url("/static/PTR4800.jpg");
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.logo-palgharmilers {
+  width: 46px;
+  height: 40px;
+  border-radius: 100%;
+  overflow: hidden;
+  margin-top: -6px;
+}
+#caption {
+  font-size: 17px;
+  font-family: Lucida Handwriting;
+  font-weight: bold;
+  color:blue;
+  text-align: center;
+  /* position: absolute;
+  top: 18%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+}
+.mainwindow {
+  transform: translate(-50%, -50%);
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  font-weight: bold;
+  border: 3px solid #f1f1f1;
+  z-index: 4;
+  width: 700px;
+  height: 500px;
+  top:380px;
+  left:50%;
+  text-align: justify;
+  margin:0 auto;
+  padding:10px;
+  border-radius:20px;
+}

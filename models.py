@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 
 db = SQLAlchemy()
 
@@ -38,5 +39,19 @@ class Blogpost(db.Model):
     date_posted = db.Column(db.DateTime)
     content = db.Column(db.Text)
 
+class Event(db.Model):
+    __tablename__ = "events"
+    id = db.Column(db.Integer, primary_key=True)
+    title=db.Column(db.String(255), nullable=False)
+    start_date=db.Column(db.TIMESTAMP, nullable=False)
+    end_date = db.Column(db.TIMESTAMP, nullable=False)
+    event_description= db.Column(db.String(255), nullable=True)
+
+class Guser(db.Model, UserMixin):
+    __tablename__ = 'gusers'
+    id = db.Column(db.Text, primary_key=True)
+    name = db.Column(db.String(64), nullable=False)
+    email = db.Column(db.String(64), nullable=False, unique=True)
+    profile_pic = db.Column(db.String(255), nullable=True)
 
 

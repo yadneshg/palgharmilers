@@ -1,33 +1,12 @@
 {% extends "layout.html" %}
+{% block heading %}
+  <script src="/static/js/layout.js"></script>
+     <link rel="stylesheet" href="/static/css/common.css?new Date().getTime()">
+{% endblock %}
+
 {% block body %}
 <style>
-  body,
-  html {
-    height: 100%;
-  }
 
-  .bg {
-    background-image: url("/static/background2.jpg");
-    height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  .message {
-    background-color: rgb(0, 0, 0);  /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.001);   /* Black w/opacity/see-through */
-    color: blue;
-    font-weight: bold;
-    font-family: Castellar;
-    position: absolute;
-    top: 18%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    width: 50%;
-    padding: 20px;
-    text-align: center;
-  }
   /* Position text in the middle of the page/image */
   .loginwindow {
     background-color: rgb(0, 0, 0);
@@ -85,7 +64,7 @@
     opacity: 0.8;
   }
 
-  .imgcontainer {
+  .centeralign {
     text-align: center;
     margin: 12px 0 6px 0;
   }
@@ -95,53 +74,22 @@
     border-radius: 50%;
   }
 
-  /* Close Button */
-
-  [class*='close-'] {
-    color: #777;
-    font: 14px/100% arial, sans-serif;
-    position: absolute;
-    right: 5px;
-    text-decoration: none;
-    text-shadow: 0 1px 0 #fff;
-    top: 5px;
-  }
-
-  .close-classic:after {
-    content: 'X';
-    /* ANSI X letter */
-  }
 
   .loginwindow:after {
     content: '';
     display: block;
     clear: both;
   }
-  /* The Close Button (x) */
-.close {
-  position: absolute;
-  right: 25px;
-  top: 0;
-  color: #000;
-  font-size: 35px;
-  font-weight: bold;
-}
 
-.close:hover,
-.close:focus {
-  color: blue;
-  cursor: pointer;
-}
+
+
 </style>
 
 <body>
-  <div class="message">
-    {{ message }}
-  </div>
-  <div class="loginwindow" id= "id01">
+  <div class="mainwindow" id= "id01">
     <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close">&times;</span>
     <form action="{{url_for('userlogin')}}" method="post">
-      <div class="imgcontainer">
+      <div class="centeralign">
         <img src="/static/cyclinglogo.jpg" alt="cycling Logo" class="logo">
       </div>
       <div>
@@ -150,10 +98,31 @@
 
         <label for="password"><b>Password</b></label>
         <input type="password" placeholder="Enter Password" name="password" required>
+        <div class="centeralign">
         <button class="btn btn-primary btn-lg" id="loginbtn"  type="submit" value="Login">Login</button>
-    </form><br><br>
-
+        </div>
+    </form><br>
+<div class="centeralign">
     <div class="newuser"><a href="{{url_for('forregistermember')}}">New User? Register</a></div><br>
-    <div class="psw"> <a href="{{url_for('index')}}">Forgot password?</a></div>
+    <div class="psw"> <a href="{{url_for('index')}}">Forgot password?</a></div><br>
+    <div class="psw"> <a href="{{url_for('google_login')}}">Login with <img style="" id="logo" alt="google" width="50px" src="http://res.cloudinary.com/wilfredxd/image/upload/v1471790654/google-logo_paxdp8.png" /></a></div>
   </div>
+    </div>
+    {% with flashmessages = get_flashed_messages() %}
+          {% for flashmessage in flashmessages %}
+                {% if flashmessage %}
+              <!-- Do something with the message -->
+              <div id = "alertmsg">
+                 <div class = "message">{{ flashmessage }}</div><br>
+                 <button class = "btn btn-primary">OK</button>
+              </div>
+              {% endif %}
+          {% endfor %}
+    {% endwith %}
+    <script>
+      var alertmsgBox = $("#alertmsg");
+      alertmsgBox.find(".btn").unbind().click(function() {
+       alertmsgBox.hide();
+       });
+  </script>
   {% endblock %}
