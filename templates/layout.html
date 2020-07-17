@@ -34,7 +34,6 @@
       transform: translate(-50%, -50%); */
     }
   </style>
-  <script src="/static/js/allscripts.js"></script>
   <link rel="stylesheet" href="/static/css/common.css?new Date().getTime()">
   {% block heading %}
   {% endblock %}
@@ -96,5 +95,13 @@
     {% block body %}
     {% endblock %}
   </div>
+  <script>
+  function submitForm() {
+    var frm = document.getElementsByName('searchform')[0];
+    frm.submit(); // Submit the form
+    frm.reset(); // Reset all form data
+    return false; // Prevent page refresh
+  }
+  </script>
 </body>
 </html>

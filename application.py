@@ -90,8 +90,7 @@ def index():
         member_date = int(memberbirthday[8:10])
         if d==member_date and m== member_month:
             birthday_boy += "Happy Birthday,"+member.firstname+"!  "
-        profilepicid=session['profilepicid']
-    return render_template("index.html",birthday_boy=birthday_boy, message=message, profilepicid=profilepicid)
+    return render_template("index.html",birthday_boy=birthday_boy, message=message)
 
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
@@ -112,6 +111,7 @@ def userlogin():
             session['logged_in'] = True
             session['googleuser'] = False
             session['profilepicid'] = member.id
+            session['username'] = username
             message= "You are Logged In"
             print(session['profilepicid'])
             return render_template('index.html', message=message)
@@ -353,10 +353,9 @@ def forupdatemember():
     member.mobile=mobile
     member.dob=dob
     member.strava_id=strava_id
-
+    print(f"uuuuu :{member.username}")
+    print(session.get('username'))
     if (member.username == session.get('username')) or (session.get('username') == 'admin'):
-        print(f"uuuuu :{member.username}")
-        print(session.get('username'))
         db.session.commit()
     else:
         flash("Cannot update data of other members")
@@ -486,7 +485,10 @@ def club_data(club_id):
     print(clubdata)
     return render_template("clubdata.html", clubdata=clubdata, entries=entries, club_id=club_id, member_strava_id=member_strava_id)
 
-
+@app.route("/club_athlete_data/<int:strava_id>",  methods=['GET', 'POST'])
+def club_athlete_data(strava_id):
+    print(strava_id)
+    return render_template("clubathletestats.html")
 
 #
 # @app.route('/deleteimage', methods=['GET', 'POST'])
@@ -652,13 +654,22 @@ def calendar():
     for event in events:
         start_date_list.append(event.start_date)
     nearestdate=nearest(start_date_list, today)
-    nearestevent = Event.query.filter_by(start_date=nearestdate).first()
-    nearesteventtitle = nearestevent.title
-
+    if nearestdate:
+        nearestevent = Event.query.filter_by(start_date=nearestdate).first()
+        nearesteventtitle = nearestevent.title
+    else:
+        nearesteventtitle = ''
     return render_template('event_calendar.html',events=events,nearestdate=nearestdate, nearesteventtitle=nearesteventtitle)
 
 def nearest(start_date_list, today):
-     return min([i for i in start_date_list if i > today], key=lambda x: abs(x - today))
+    events=[]
+    for i in start_date_list:
+        if i>today:
+            events.append(i)
+    if events:
+        latest_event=min([event for event in events], key=lambda x: abs(x - today))
+        return latest_event
+
 
 @app.route('/addEvent',methods=["post"])
 @login_required

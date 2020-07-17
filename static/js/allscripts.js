@@ -17,6 +17,7 @@ function visibleonclick1() {
   function visibleonclick3() {
     document.querySelector('#stats').style.display = "initial";
   }
+
   $(".custom-file-input").on("change", function() {
   var fileName = $(this).val().split("\\").pop();
   $(this).siblings(".custom-file-label").addClass("selected").html(fileName);

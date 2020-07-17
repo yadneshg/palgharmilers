@@ -101,7 +101,11 @@
     </form>
   </div>
   <div id="alertmsg">
+    {% if nearesteventtitle %}
     <div class="message">Next Event : {{nearesteventtitle}} on {{nearestdate}}</div><br>
+    {% else %}
+    <div class="message">No Upcoming Event!</div><br>
+    {% endif %}
     <button class="btn btn-primary">OK</button>
   </div>
   <div id="eventDetailModal" class="onclickwindow">

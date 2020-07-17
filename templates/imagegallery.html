@@ -299,7 +299,7 @@ label img {
     <span onclick="document.getElementById('imageslideshow').style.display='none'" class="close" title="Close">&times;</span>
     {% for image_name in image_names %}
     <div class="mySlides">
-      <img id="imggallery1" src="{{url_for('send_image', filename=image_name)}}" style="width:100%"> <br><br>
+      <img id="imggallery" src="{{url_for('send_image', filename=image_name)}}" style="width:100%"> <br><br>
       <div class="text">{{image_name}}</div>
     </div>
     {% endfor %}
@@ -375,6 +375,37 @@ label img {
 
 </script>
 <script>
+  $(".custom-file-input").on("change", function() {
+  var fileName = $(this).val().split("\\").pop();
+  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+});
+
+  var slideIndex = 1;
+  showSlides(slideIndex);
+
+  function plusSlides(n) {
+    showSlides(slideIndex += n);
+  }
+
+  function currentSlide(n) {
+    showSlides(slideIndex = n);
+  }
+
+  function showSlides(n) {
+    var i;
+    var slides = document.getElementsByClassName("mySlides");
+    if (n > slides.length) {
+      slideIndex = 1
+    }
+    if (n < 1) {
+      slideIndex = slides.length
+    }
+    for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+    }
+    slides[slideIndex - 1].style.display = "block";
+  }
+
   var alertmsgBox = $("#alertmsg");
   alertmsgBox.find(".btn").unbind().click(function() {
    alertmsgBox.hide();
