@@ -38,6 +38,6 @@ sqlparse==0.3.1
 stravalib==0.10.2
 twilio==6.40.0
 units==0.7
-urllib3==1.25.9
+urllib3==1.26.5
 view==0.1
 Werkzeug==1.0.1
